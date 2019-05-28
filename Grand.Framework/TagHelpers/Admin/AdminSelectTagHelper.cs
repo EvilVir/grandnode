@@ -12,6 +12,7 @@ namespace Grand.Framework.TagHelpers.Admin
     {
         private const string ForAttributeName = "asp-for";
         private const string DisplayHintAttributeName = "asp-display-hint";
+        private const string DisabledAttributeName = "asp-disabled";
 
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
@@ -25,6 +26,12 @@ namespace Grand.Framework.TagHelpers.Admin
         [HtmlAttributeName(DisplayHintAttributeName)]
         public bool DisplayHint { get; set; } = true;
 
+        /// <summary>
+        /// Indicates whether the field is disabled
+        /// </summary>
+        [HtmlAttributeName(DisabledAttributeName)]
+        public string IsDisabled { set; get; }
+
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             await base.ProcessAsync(context, output);
@@ -34,9 +41,12 @@ namespace Grand.Framework.TagHelpers.Admin
                                 ? $"{output.Attributes["class"].Value}"
                                 : "form-control k-input";
             output.Attributes.SetAttribute("class", classValue);
-            
-        }
-    }
 
-    
+            //disabled attribute
+            if (bool.TryParse(IsDisabled, out bool disabled) && disabled)
+            {
+                output.Attributes.Add(new TagHelperAttribute("disabled", "disabled"));
+            }
+        }
+    }   
 }

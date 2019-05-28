@@ -20,6 +20,7 @@
             <admin-label asp-for="StartDate" />
             <div class="col-md-3 col-sm-3">
                 <admin-input asp-for="StartDate" />
+                <span asp-validation-for="StartDate"></span>
             </div>
         </div>
 
@@ -27,6 +28,7 @@
             <admin-label asp-for="EndDate" />
             <div class="col-md-3 col-sm-3">
                 <admin-input asp-for="EndDate" />
+                <span asp-validation-for="EndDate"></span>
             </div>
         </div>
 
@@ -34,6 +36,7 @@
             <admin-label asp-for="StartTime" />
             <div class="col-md-3 col-sm-3">
                 <admin-input asp-for="StartTime" />
+                <span asp-validation-for="StartTime"></span>
             </div>
         </div>
 
@@ -41,6 +44,7 @@
             <admin-label asp-for="EndTime" />
             <div class="col-md-3 col-sm-3">
                 <admin-input asp-for="EndTime" />
+                <span asp-validation-for="EndTime"></span>
             </div>
         </div>
 
@@ -50,8 +54,10 @@
                 <div class="col-md-9 col-sm-9">
                     <span id="pnlInterval">
                         <admin-input asp-for="Interval" />
+                        <span asp-validation-for="Interval"></span>
                     </span>
-                    <admin-select asp-for="IntervalUnit" asp-items="((IntervalUnit)Model.IntervalUnit).ToSelectList()" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
+                    <admin-select asp-for="IntervalUnit" asp-disabled="@Model.IntervalIsLocked" asp-items="((IntervalUnit)Model.IntervalUnit).ToSelectList()" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
+                    <span asp-validation-for="IntervalUnit"></span>
                 </div>
             </div>
         </div>
@@ -60,6 +66,7 @@
             <admin-label asp-for="Quantity" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Quantity" />
+                <span asp-validation-for="Quantity"></span>
             </div>
         </div>
 
@@ -67,6 +74,7 @@
             <admin-label asp-for="Parameter" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Parameter" />
+                <span asp-validation-for="Parameter"></span>
             </div>
         </div>
         <div class="portlet">

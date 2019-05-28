@@ -2709,7 +2709,7 @@
   <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Days.Finaldatemustbegreaterthanstartdate">
     <Value>Final date must be greater than start date</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.catalog.productreservations.fields.endtime.required">
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.EndDate.Required">
     <Value>End date is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Interval.Intervalmustbegreaterthanzero">
@@ -2721,8 +2721,8 @@
   <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Resource.Required">
     <Value>Resource name is required</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.catalog.productreservations.fields.starttime.required">
-    <Value>Start time is required</Value>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.StartDate.Required">
+    <Value>Start date is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews">
     <Value>Product reviews</Value>

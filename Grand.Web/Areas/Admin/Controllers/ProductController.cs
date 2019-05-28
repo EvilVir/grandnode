@@ -2204,11 +2204,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult GenerateCalendarPopup(string productId, string resourceSystemName = null)
+        public async Task<IActionResult> GenerateCalendarPopup(string productId, string resourceSystemName = null)
         {
-            var model = new ProductModel.GenerateCalendarModel {
+            var product = await _productService.GetProductById(productId);
+
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var model = new ProductModel.GenerateCalendarModel 
+            {
                 ProductId = productId,
                 Resource = !string.IsNullOrEmpty(resourceSystemName) ? resourceSystemName : null,
+                Interval = product.Interval,
+                IntervalUnit = product.IntervalUnitId,
+                IntervalIsLocked = await _productReservationService.HasAnyReservations(productId)
             };
 
             return View(model);
@@ -2217,25 +2226,28 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> GenerateCalendarPopup(string productId, ProductModel.GenerateCalendarModel model)
         {
+            model.ProductId = productId;
+
             var reservations = await _productReservationService.GetProductReservationsByProductId(productId, null, null);
             if (reservations.Any())
             {
+                model.IntervalIsLocked = true;
+
                 var product = await _productService.GetProductById(productId);
                 if (product == null)
                     throw new ArgumentNullException("product");
 
-                if (((product.IntervalUnitType == IntervalUnit.Minute || product.IntervalUnitType == IntervalUnit.Hour) && (IntervalUnit)model.Interval == IntervalUnit.Day) ||
-                    (product.IntervalUnitType == IntervalUnit.Day) && (((IntervalUnit)model.IntervalUnit == IntervalUnit.Minute || (IntervalUnit)model.IntervalUnit == IntervalUnit.Hour)))
-                {
-                    return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Calendar.CannotChangeInterval") });
-                }
+                model.IntervalUnit = product.IntervalUnitId;
+            }
+            else
+            {
+                model.IntervalIsLocked = false;
             }
 
             await _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit, model.IncBothDate);
 
             if (ModelState.IsValid)
             {
-                model.ProductId = productId;
                 await _productReservationService.InsertProductReservation(GenerateReservations(model, reservations));
 
                 ViewBag.RefreshPage = true;

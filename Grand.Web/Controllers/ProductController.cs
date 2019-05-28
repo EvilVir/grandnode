@@ -873,15 +873,15 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> GetDatesForMonth(string productId, int month, string parameter, int year, [FromServices] IProductReservationService productReservationService)
         {
             var allReservations = await productReservationService.GetProductReservationsByProductId(productId, true, null);
-            var query = allReservations.Where(x => x.Date.Month == month && x.Date.Year == year && x.Date >= DateTime.UtcNow);
-            if (!string.IsNullOrEmpty(parameter))
-            {
-                query = query.Where(x => x.Parameter == parameter);
-            }
+            var query = allReservations.Where(x => x.Date.Month == month && x.Date.Year == year && x.Date >= DateTime.UtcNow)
+                                       .Where(x => parameter == null || x.Parameter == parameter);
 
             var reservations = query.ToList();
+
             var inCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id)
-                .Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
+                                             .Where(x => !string.IsNullOrEmpty(x.ReservationId))
+                                             .ToList();
+
             foreach (var cartItem in inCart)
             {
                 var match = reservations.FirstOrDefault(x => x.Id == cartItem.ReservationId);

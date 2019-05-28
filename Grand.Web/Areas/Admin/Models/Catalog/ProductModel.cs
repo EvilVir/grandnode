@@ -909,6 +909,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Interval")]
             public int Interval { get; set; }
             public int IntervalUnit { get; set; }
+            public bool IntervalIsLocked { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.IncBothDate")]
             public bool IncBothDate { get; set; }

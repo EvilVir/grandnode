@@ -92,7 +92,7 @@ namespace Grand.Services.Catalog
                 query = query.Where(x => x.Date >= min && x.Date <= max);
             }
 
-            query = query.Where(x => x.Resource == resourceSystemName);
+            query = query.Where(x => resourceSystemName == null || x.Resource == resourceSystemName);
             query = query.OrderBy(x => x.Date);
             return await PagedList<ProductReservation>.Create(query, pageIndex, pageSize);
         }
@@ -217,6 +217,11 @@ namespace Grand.Services.Catalog
         public virtual async Task<IList<CustomerReservationsHelper>> GetCustomerReservationsHelperBySciId(string sciId)
         {
             return await _customerReservationsHelperRepository.Table.Where(x => x.ShoppingCartItemId == sciId).ToListAsync();
+        }
+
+        public virtual async Task<bool> HasAnyReservations(string productId)
+        {
+            return await _productReservationRepository.Table.Where(x => x.ProductId == productId).AnyAsync();
         }
     }
 }

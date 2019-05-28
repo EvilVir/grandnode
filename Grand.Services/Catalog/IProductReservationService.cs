@@ -93,5 +93,11 @@ namespace Grand.Services.Catalog
         /// <param name="Id"></param>
         /// <returns>List<CustomerReservationsHelper></returns>
         Task<IList<CustomerReservationsHelper>> GetCustomerReservationsHelperBySciId(string sciId);
+
+        /// <summary>
+        /// Checks if there are any reservations for the product
+        /// </summary>
+        /// <param name="productId"></param>
+        Task<bool> HasAnyReservations(string productId);
     }
 }

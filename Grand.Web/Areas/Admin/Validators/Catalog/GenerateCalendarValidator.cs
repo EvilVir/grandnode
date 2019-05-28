@@ -11,8 +11,8 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
     {
         public GenerateCalendarValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.StartTime).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.StartTime.Required"));
-            RuleFor(x => x.EndTime).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.EndTime.Required"));
+            RuleFor(x => x.StartDate).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.StartDate.Required"));
+            RuleFor(x => x.EndDate).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.EndDate.Required"));
             RuleFor(x => x.StartDate).LessThanOrEqualTo(x => x.EndDate).WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.Days.Finaldatemustbegreaterthanstartdate"));
             RuleFor(x => x.Interval).GreaterThan(0).WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.Interval.Intervalmustbegreaterthanzero"));
 
