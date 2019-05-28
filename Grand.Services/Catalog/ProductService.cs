@@ -477,6 +477,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.WarehouseId, product.WarehouseId)
                 .Set(x => x.Weight, product.Weight)
                 .Set(x => x.Width, product.Width)
+                .Set(x => x.Resources, product.Resources)
                 .CurrentDate("UpdatedOnUtc");
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);

@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Framework.Security;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -2415,6 +2416,70 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.Products.Bids.CantDeleteWithOrder") });
             }
             return Json(new DataSourceResult { Errors = "Bid not exists" });
+        }
+
+        #endregion
+
+        #region Resources
+
+        [HttpPost]
+        [AdminAntiForgery(true)]
+        public async Task<IActionResult> ResourceList(DataSourceRequest command, string productId)
+        {
+            var product = await _productService.GetProductById(productId);
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
+            var resources = product.Resources.OrderBy(x => x.Name);
+            var resourcesModel = new List<ProductModel.ResourceModel>();
+            foreach (var x in resources)
+            {
+                resourcesModel.Add(new ProductModel.ResourceModel {
+                    Id = x.Id,
+                    ProductId = productId,
+                    Name = x.Name,
+                    SystemName = x.SystemName
+                });
+            }
+
+            var gridModel = new DataSourceResult {
+                Data = resourcesModel,
+                Total = resourcesModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [AdminAntiForgery(true)]
+        public async Task<IActionResult> ResourceUpdate(ProductModel.ResourceModel model)
+        {
+            await _productViewModelService.UpdateResourceModel(model);
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        [AdminAntiForgery(true)]
+        public async Task<IActionResult> ResourceDelete(ProductModel.ResourceModel model)
+        {
+            await _productViewModelService.DeleteResourceModel(model);
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        [AdminAntiForgery(true)]
+        public async Task<IActionResult> ResourceAdd(ProductModel.ResourceModel model)
+        {
+            model?.Name?.Trim();
+            model?.SystemName?.Trim();
+            await _productViewModelService.InsertResourceModel(model);
+            return new NullJsonResult();
         }
 
         #endregion

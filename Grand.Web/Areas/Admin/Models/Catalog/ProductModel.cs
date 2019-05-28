@@ -560,6 +560,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
+
         public partial class AddRelatedProductModel : BaseGrandModel
         {
             public AddRelatedProductModel()
@@ -598,6 +599,19 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             //vendor
             public bool IsLoggedInAsVendor { get; set; }
         }
+
+        [Validator(typeof(ProductResourceValidator))]
+        public partial class ResourceModel : BaseGrandEntityModel
+        {
+            public string ProductId { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.Name")]
+            public string Name { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.SystemName")]
+            public string SystemName { get; set; }
+        }
+
         public partial class SimilarProductModel : BaseGrandEntityModel
         {
             public string ProductId1 { get; set; }

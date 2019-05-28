@@ -1428,6 +1428,55 @@ namespace Grand.Web.Areas.Admin.Services
             relatedProduct.ProductId1 = model.ProductId1;
             await _productService.DeleteRelatedProduct(relatedProduct);
         }
+
+        public virtual async Task InsertResourceModel(ProductModel.ResourceModel model)
+        {
+            var product = await _productService.GetProductById(model.ProductId);
+            var existingResource = product.Resources.Where(x => x.SystemName == model.SystemName).FirstOrDefault();
+
+            if (existingResource != null)
+            {
+                existingResource.Name = model.Name;
+            }
+            else
+            {
+                product.Resources.Add(new Resource() {
+                    Name = model.Name,
+                    SystemName = model.SystemName
+                });
+            }
+
+            await _productService.UpdateProduct(product);
+        }
+
+        public virtual async Task UpdateResourceModel(ProductModel.ResourceModel model)
+        {
+            var product = await _productService.GetProductById(model.ProductId);
+            var existingResource = product.Resources.Where(x => x.Id == model.Id).FirstOrDefault();
+
+            if (existingResource != null)
+            {
+                existingResource.Name = model.Name;
+                existingResource.SystemName = model.SystemName;
+            }
+
+            await _productService.UpdateProduct(product);
+        }
+
+        public virtual async Task DeleteResourceModel(ProductModel.ResourceModel model)
+        {
+            var product = await _productService.GetProductById(model.ProductId);
+            var existingResource = product.Resources.Where(x => x.Id == model.Id).FirstOrDefault();
+
+            if (existingResource != null)
+            {
+                product.Resources.Remove(existingResource);
+            }
+
+            // TODO: Remove Calendar for this resource!
+            await _productService.UpdateProduct(product);
+        }
+
         public virtual async Task InsertSimilarProductModel(ProductModel.AddSimilarProductModel model)
         {
             var productId1 = await _productService.GetProductById(model.ProductId);

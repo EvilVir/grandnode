@@ -4260,6 +4260,27 @@
   <LocaleResource Name="Admin.Catalog.Products.Reviews">
     <Value>Product Reviews</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources">
+    <Value>Resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.AddNew">
+    <Value>Add new resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.SystemName">
+    <Value>System Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.SystemName.Required">
+    <Value>System Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.SaveBeforeEdit">
+    <Value>You need to save the product before you can add resources for this product page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes">
     <Value>Specification attributes</Value>
   </LocaleResource>

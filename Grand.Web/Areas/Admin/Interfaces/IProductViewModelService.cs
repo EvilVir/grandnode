@@ -43,6 +43,9 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task InsertRelatedProductModel(ProductModel.AddRelatedProductModel model);
         Task UpdateRelatedProductModel(ProductModel.RelatedProductModel model);
         Task DeleteRelatedProductModel(ProductModel.RelatedProductModel model);
+        Task InsertResourceModel(ProductModel.ResourceModel model);
+        Task UpdateResourceModel(ProductModel.ResourceModel model);
+        Task DeleteResourceModel(ProductModel.ResourceModel model);
         Task InsertSimilarProductModel(ProductModel.AddSimilarProductModel model);
         Task UpdateSimilarProductModel(ProductModel.SimilarProductModel model);
         Task DeleteSimilarProductModel(ProductModel.SimilarProductModel model);
