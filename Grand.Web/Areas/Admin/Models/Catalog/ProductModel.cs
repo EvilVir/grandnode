@@ -888,6 +888,8 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
                 Quantity = 1;
             }
 
+            public string ProductId { get; set; }
+
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDate")]
             [UIHint("DateNullable")]
             public DateTime? StartDate { get; set; }

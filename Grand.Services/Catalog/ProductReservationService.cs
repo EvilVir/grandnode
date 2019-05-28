@@ -51,7 +51,7 @@ namespace Grand.Services.Catalog
         /// <param name="productId">Product Id</param>
         /// <returns>Product reservations</returns>
         public virtual async Task<IPagedList<ProductReservation>> GetProductReservationsByProductId(string productId, bool? showVacant, DateTime? date,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            int pageIndex = 0, int pageSize = int.MaxValue, string resourceSystemName = null)
         {
             var query = _productReservationRepository.Table.Where(x => x.ProductId == productId);
 
@@ -75,6 +75,7 @@ namespace Grand.Services.Catalog
                 query = query.Where(x => x.Date >= min && x.Date <= max);
             }
 
+            query = query.Where(x => x.Resource == resourceSystemName);
             query = query.OrderBy(x => x.Date);
             return await PagedList<ProductReservation>.Create(query, pageIndex, pageSize);
         }

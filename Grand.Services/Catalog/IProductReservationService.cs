@@ -35,7 +35,7 @@ namespace Grand.Services.Catalog
         /// <param name="productId">Product Id</param>
         /// <returns>Product reservations</returns>
         Task<IPagedList<ProductReservation>> GetProductReservationsByProductId(string productId, bool? showVacant, DateTime? date,
-            int pageIndex = 0, int pageSize = int.MaxValue);
+            int pageIndex = 0, int pageSize = int.MaxValue, string resourceSystemName = null);
 
         /// <summary>
         /// Gets product reservation for specified Id

@@ -1,0 +1,226 @@
+﻿@model ProductModel.GenerateCalendarModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="ProductId" type="hidden" />
+<input asp-for="Resource" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<div class="form-horizontal">
+    <div class="form-body">
+
+        <div class="form-group">
+            <admin-label asp-for="StartDate" />
+            <div class="col-md-3 col-sm-3">
+                <admin-input asp-for="StartDate" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="EndDate" />
+            <div class="col-md-3 col-sm-3">
+                <admin-input asp-for="EndDate" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="StartTime" />
+            <div class="col-md-3 col-sm-3">
+                <admin-input asp-for="StartTime" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="EndTime" />
+            <div class="col-md-3 col-sm-3">
+                <admin-input asp-for="EndTime" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-inline">
+                <admin-label asp-for="Interval" />
+                <div class="col-md-9 col-sm-9">
+                    <span id="pnlInterval">
+                        <admin-input asp-for="Interval" />
+                    </span>
+                    <admin-select asp-for="IntervalUnit" asp-items="((IntervalUnit)Model.IntervalUnit).ToSelectList()" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" id="pnlQuantity">
+            <admin-label asp-for="Quantity" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Quantity" />
+            </div>
+        </div>
+
+        <div class="form-group" id="pnlParameter">
+            <admin-label asp-for="Parameter" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Parameter" />
+            </div>
+        </div>
+        <div class="portlet">
+            <div class="x_title">
+                <div class="caption">@T("Admin.Catalog.Products.Calendar.WeekDay")</div>
+            </div>
+            <div class="x_content">
+                <div class="form-group">
+                    <div class="mt-checkbox-inline ">
+                        <label class="mt-checkbox control control-checkbox">
+                            <admin-input asp-for="Monday" />
+                            @T("Admin.Catalog.Products.Fields.Calendar.Monday")
+                            <div class="control__indicator"></div>
+                        </label>
+                        <label class="mt-checkbox control control-checkbox">
+                            <admin-input asp-for="Tuesday" />
+                            @T("Admin.Catalog.Products.Fields.Calendar.Tuesday")
+                            <div class="control__indicator"></div>
+                        </label>
+                        <label class="mt-checkbox control control-checkbox">
+                            <admin-input asp-for="Wednesday" />
+                            @T("Admin.Catalog.Products.Fields.Calendar.Wednesday")
+                            <div class="control__indicator"></div>
+                        </label>
+                        <label class="mt-checkbox control control-checkbox">
+                            <admin-input asp-for="Thursday" />
+                            @T("Admin.Catalog.Products.Fields.Calendar.Thursday")
+                            <div class="control__indicator"></div>
+                        </label>
+                        <label class="mt-checkbox control control-checkbox">
+                            <admin-input asp-for="Friday" />
+                            @T("Admin.Catalog.Products.Fields.Calendar.Friday")
+                            <div class="control__indicator"></div>
+                        </label>
+                        <label class="mt-checkbox control control-checkbox">
+                            <admin-input asp-for="Saturday" />
+                            @T("Admin.Catalog.Products.Fields.Calendar.Saturday")
+                            <div class="control__indicator"></div>
+                        </label>
+                        <label class="mt-checkbox control control-checkbox">
+                            <admin-input asp-for="Sunday" />
+                            @T("Admin.Catalog.Products.Fields.Calendar.Sunday")
+                            <div class="control__indicator"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            function toggleInternalType() {
+                var selectedInternalTypeId = $("#@Html.FieldIdFor(model => model.IntervalUnit)").val();
+                if (selectedInternalTypeId == @(((int)IntervalUnit.Day).ToString())) {
+                    $("#pnlStartTime").hide();
+                    $("#pnlEndTime").hide();
+                    $("#pnlResource").show();
+                    $("#pnlIncludeBothDates").show();
+                    $("#pnlParameter").hide();
+                    $("#pnlQuantity").hide();
+                    $("#pnlInterval").hide();
+                    $("#@Html.FieldIdFor(model => model.Interval)").data("kendoNumericTextBox").value(1);
+                } else {
+                    $("#pnlStartTime").show();
+                    $("#pnlEndTime").show();
+                    $("#pnlIncludeBothDates").hide();
+                    $("#pnlParameter").show();
+                    $("#pnlQuantity").show();
+                    $("#pnlInterval").show();
+                    $("#@Html.FieldIdFor(model => model.Interval)").data("kendoNumericTextBox").value(0);
+                }
+            }
+
+            toggleInternalType();
+            $("#@Html.FieldIdFor(model => model.IntervalUnit)").change(toggleInternalType);
+
+            $("#generateCalendar").click(function () {
+
+                var datepickerFrom = $("#@Html.FieldIdFor(model => model.StartDate)").data("kendoDatePicker");
+                var dateFrom = datepickerFrom.value();
+                dateFrom = kendo.toString(dateFrom, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
+
+                var datepickerTo = $("#@Html.FieldIdFor(model => model.EndDate)").data("kendoDatePicker");
+                var dateTo = datepickerTo.value();
+                dateTo = kendo.toString(dateTo, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
+
+                var timeFrom = $("#@Html.FieldIdFor(model => model.StartTime)").data("kendoTimePicker");
+                var hourFrom = timeFrom.value();
+                hourFrom = kendo.toString(hourFrom, "HH:mm");
+
+                var timeTo = $("#@Html.FieldIdFor(model => model.EndTime)").data("kendoTimePicker");
+                var hourTo = timeTo.value();
+                hourTo = kendo.toString(hourTo, "HH:mm");
+
+                var interval = $("#@Html.FieldIdFor(model => model.Interval)").val();
+                var intervalUnit = $("#@Html.FieldIdFor(model => model.IntervalUnit)").val();
+                var incBothDate = $("#@Html.FieldIdFor(model => model.IncBothDate)").prop("checked");
+                var quantity = $("#@Html.FieldIdFor(model => model.Quantity)").val();
+                var monday = $("#@Html.FieldIdFor(model => model.Monday)").prop("checked");
+                var tuesday = $("#@Html.FieldIdFor(model => model.Tuesday)").prop("checked");
+                var wednesday = $("#@Html.FieldIdFor(model => model.Wednesday)").prop("checked");
+                var thursday = $("#@Html.FieldIdFor(model => model.Thursday)").prop("checked");
+                var friday = $("#@Html.FieldIdFor(model => model.Friday)").prop("checked");
+                var saturday = $("#@Html.FieldIdFor(model => model.Saturday)").prop("checked");
+                var sunday = $("#@Html.FieldIdFor(model => model.Sunday)").prop("checked");
+                var resource = $("#@Html.FieldIdFor(model => model.Resource)").val()
+                var parameter = $("#@Html.FieldIdFor(model => model.Parameter)").val()
+
+                var postData = {
+                    productId: '@(Model.ProductId)',
+                    StartDate: dateFrom,
+                    StartTime: hourFrom,
+                    EndDate: dateTo,
+                    EndTime: hourTo,
+                    Interval: interval,
+                    IntervalUnit: intervalUnit,
+                    IncBothDate: incBothDate,
+                    Quantity: quantity,
+                    Monday: monday,
+                    Tuesday: tuesday,
+                    Wednesday: wednesday,
+                    Thursday: thursday,
+                    Friday: friday,
+                    Saturday: saturday,
+                    Sunday: sunday,
+                    Resource: resource,
+                    Parameter: parameter
+                };
+
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("GenerateCalendar", "Product"))",
+                    dataType: 'json',
+                    data: postData,
+                    success: function (data) {
+                        if (data.success) {
+                            var grid = $("#reservations-grid").data('kendoGrid');
+                            grid.dataSource.read();
+                        }
+                        else {
+                            alert(data.errors);
+                        }
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+            });
+
+        });
+</script>
