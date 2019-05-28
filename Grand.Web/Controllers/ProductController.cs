@@ -872,28 +872,22 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> GetDatesForMonth(string productId, int month, string parameter, int year, [FromServices] IProductReservationService productReservationService)
         {
-            var allReservations = await productReservationService.GetProductReservationsByProductId(productId, true, null);
-            var query = allReservations.Where(x => x.Date.Month == month && x.Date.Year == year && x.Date >= DateTime.UtcNow)
-                                       .Where(x => parameter == null || x.Parameter == parameter);
-
-            var reservations = query.ToList();
+            var emptySlots = (await productReservationService.GetProductReservationsByProductId(productId, true, new DateTime(year, month, 1), new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59, 999)))
+                                .Where(x => x.Date >= DateTime.UtcNow)
+                                .Where(x => parameter == null || x.Parameter == parameter)
+                                .ToList();
 
             var inCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id)
                                              .Where(x => !string.IsNullOrEmpty(x.ReservationId))
+                                             .Select(x => x.ReservationId)
                                              .ToList();
 
-            foreach (var cartItem in inCart)
-            {
-                var match = reservations.FirstOrDefault(x => x.Id == cartItem.ReservationId);
-                if (match != null)
-                {
-                    reservations.Remove(match);
-                }
-            }
+            emptySlots = emptySlots.Where(x => !inCart.Contains(x.Id))
+                                   .GroupBy(x => x.Date)
+                                   .Select(x => x.First())
+                                   .ToList();
 
-            var toReturn = reservations.GroupBy(x => x.Date).Select(x => x.First()).ToList();
-
-            return Json(toReturn);
+            return Json(emptySlots);
         }
         #endregion
     }

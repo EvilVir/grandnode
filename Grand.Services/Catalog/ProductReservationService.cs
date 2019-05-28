@@ -70,6 +70,15 @@ namespace Grand.Services.Catalog
         public virtual async Task<IPagedList<ProductReservation>> GetProductReservationsByProductId(string productId, bool? showVacant, DateTime? date,
             int pageIndex = 0, int pageSize = int.MaxValue, string resourceSystemName = null)
         {
+            var min = date.HasValue ? new DateTime(date.Value.Year, date.Value.Month, date.Value.Day, 0, 0, 0, 0) : (DateTime?)null;
+            var max = date.HasValue ? new DateTime(date.Value.Year, date.Value.Month, date.Value.Day, 23, 59, 59, 999) : (DateTime?)null;
+
+            return await GetProductReservationsByProductId(productId, showVacant, min, max, pageIndex, pageSize, resourceSystemName);
+        }
+
+        public virtual async Task<IPagedList<ProductReservation>> GetProductReservationsByProductId(string productId, bool? showVacant, DateTime? minDate,
+            DateTime? maxDate, int pageIndex = 0, int pageSize = int.MaxValue, string resourceSystemName = null)
+        {
             var query = _productReservationRepository.Table.Where(x => x.ProductId == productId);
 
             if (showVacant.HasValue)
@@ -84,12 +93,14 @@ namespace Grand.Services.Catalog
                 }
             }
 
-            if (date.HasValue)
+            if (minDate.HasValue)
             {
-                var min = new DateTime(date.Value.Year, date.Value.Month, date.Value.Day, 0, 0, 0, 0);
-                var max = new DateTime(date.Value.Year, date.Value.Month, date.Value.Day, 23, 59, 59, 999);
+                query = query.Where(x => x.Date >= minDate);
+            }
 
-                query = query.Where(x => x.Date >= min && x.Date <= max);
+            if (maxDate.HasValue)
+            {
+                query = query.Where(x => x.Date <= maxDate);
             }
 
             query = query.Where(x => resourceSystemName == null || x.Resource == resourceSystemName);
