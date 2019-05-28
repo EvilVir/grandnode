@@ -51,7 +51,7 @@ namespace Grand.Services.Catalog
         /// <param name="productReservation">Product reservation</param>
         public virtual async Task DeleteProductReservation(IEnumerable<ProductReservation> productReservations)
         {
-            if (productReservations == null || !productReservations.Any())
+            if (productReservations == null)
                 throw new ArgumentNullException("productReservation");
 
             await _productReservationRepository.DeleteAsyncById(productReservations.Select(x => x.Id));
@@ -116,7 +116,7 @@ namespace Grand.Services.Catalog
         /// <param name="productReservations">Product reservation</param>
         public virtual async Task InsertProductReservation(IEnumerable<ProductReservation> productReservations)
         {
-            if (productReservations == null || !productReservations.Any())
+            if (productReservations == null)
                 throw new ArgumentNullException("productAttribute");
 
             await _productReservationRepository.InsertAsync(productReservations);

@@ -2279,11 +2279,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             var _dateFrom = new DateTime(model.StartDate.Value.Year, model.StartDate.Value.Month, model.StartDate.Value.Day, 0, 0, 0, 0);
             var _dateTo = new DateTime(model.EndDate.Value.Year, model.EndDate.Value.Month, model.EndDate.Value.Day, 23, 59, 59, 999);
 
-            if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
-            {
-                model.Quantity = 1;
-            }
-
             for (var iterator = _dateFrom; iterator <= _dateTo; iterator += new TimeSpan(0, _minutesToAdd, 0))
             {
                 if ((IntervalUnit)model.IntervalUnit != IntervalUnit.Day)
@@ -2324,11 +2319,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 for (var i = 0; i < model.Quantity; i++)
                 {
-                    if (((IntervalUnit)model.IntervalUnit) == IntervalUnit.Day && reservations.Where(x => x.Resource == model.Resource && x.Date == iterator).Any())
-                    {
-                        continue;
-                    }
-
                     yield return new ProductReservation 
                     {
                         OrderId = "",

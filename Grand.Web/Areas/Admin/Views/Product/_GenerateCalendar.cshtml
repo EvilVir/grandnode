@@ -136,14 +136,12 @@
                     $("#pnlEndTime").hide();
                     $("#pnlResource").show();
                     $("#pnlIncludeBothDates").show();
-                    $("#pnlQuantity").hide();
                     $("#pnlInterval").hide();
                     $("#@Html.FieldIdFor(model => model.Interval)").data("kendoNumericTextBox").value(1);
                 } else {
                     $("#pnlStartTime").show();
                     $("#pnlEndTime").show();
                     $("#pnlIncludeBothDates").hide();
-                    $("#pnlQuantity").show();
                     $("#pnlInterval").show();
                     $("#@Html.FieldIdFor(model => model.Interval)").data("kendoNumericTextBox").value(0);
                 }
