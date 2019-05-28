@@ -231,13 +231,21 @@ namespace Grand.Data
         /// <param name="entities">Entities</param>
         public virtual async Task<IEnumerable<T>> DeleteAsync(IEnumerable<T> entities)
         {
-            foreach (T entity in entities)
-            {
-                await DeleteAsync(entity);
-            }
+            await DeleteAsyncById(entities.Select(x => x.Id));
+
             return entities;
         }
 
+        /// <summary>
+        /// Async Deletes entities by their ids
+        /// </summary>
+        /// <param name="ids">Enumerable of ids of entities to be deleted</param>
+        public virtual async Task<IEnumerable<string>> DeleteAsyncById(IEnumerable<string> ids)
+        {
+            await this._collection.DeleteManyAsync(e => ids.Contains(e.Id));
+
+            return ids;
+        }
 
         #endregion
 

@@ -103,6 +103,12 @@ namespace Grand.Core.Data
         Task<IEnumerable<T>> DeleteAsync(IEnumerable<T> entities);
 
         /// <summary>
+        /// Async Deletes entities by their ids
+        /// </summary>
+        /// <param name="ids">Enumerable of ids of entities to be deleted</param>
+        Task<IEnumerable<string>> DeleteAsyncById(IEnumerable<string> ids);
+
+        /// <summary>
         /// Determines whether a list contains any elements
         /// </summary>
         /// <returns></returns>

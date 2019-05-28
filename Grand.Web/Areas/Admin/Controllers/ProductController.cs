@@ -2230,109 +2230,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Calendar.CannotChangeInterval") });
                 }
             }
+
             await _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit, model.IncBothDate);
 
             if (ModelState.IsValid)
             {
-                int minutesToAdd = 0;
-                if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Minute)
-                {
-                    minutesToAdd = model.Interval;
-                }
-                else if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Hour)
-                {
-                    minutesToAdd = model.Interval * 60;
-                }
-                else if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
-                {
-                    minutesToAdd = model.Interval * 60 * 24;
-                }
-
-                int _hourFrom = model.StartTime.Hour;
-                int _minutesFrom = model.StartTime.Minute;
-                int _hourTo = model.EndTime.Hour;
-                int _minutesTo = model.EndTime.Minute;
-                DateTime _dateFrom = new DateTime(model.StartDate.Value.Year, model.StartDate.Value.Month, model.StartDate.Value.Day, 0, 0, 0, 0);
-                DateTime _dateTo = new DateTime(model.EndDate.Value.Year, model.EndDate.Value.Month, model.EndDate.Value.Day, 23, 59, 59, 999);
-                if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
-                {
-                    model.Quantity = 1;
-                    model.Parameter = "";
-                }
-                else
-                {
-                    model.Resource = "";
-                }
-
-                List<DateTime> dates = new List<DateTime>();
-                int counter = 0;
-                for (DateTime iterator = _dateFrom; iterator <= _dateTo; iterator += new TimeSpan(0, minutesToAdd, 0))
-                {
-                    if ((IntervalUnit)model.IntervalUnit != IntervalUnit.Day)
-                    {
-                        if (iterator.Hour >= _hourFrom && iterator.Hour <= _hourTo)
-                        {
-                            if (iterator.Hour == _hourTo)
-                            {
-                                if (iterator.Minute > _minutesTo)
-                                {
-                                    continue;
-                                }
-                            }
-                            if (iterator.Hour == _hourFrom)
-                            {
-                                if (iterator.Minute < _minutesFrom)
-                                {
-                                    continue;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-
-                    if ((iterator.DayOfWeek == DayOfWeek.Monday && !model.Monday) ||
-                       (iterator.DayOfWeek == DayOfWeek.Tuesday && !model.Tuesday) ||
-                       (iterator.DayOfWeek == DayOfWeek.Wednesday && !model.Wednesday) ||
-                       (iterator.DayOfWeek == DayOfWeek.Thursday && !model.Thursday) ||
-                       (iterator.DayOfWeek == DayOfWeek.Friday && !model.Friday) ||
-                       (iterator.DayOfWeek == DayOfWeek.Saturday && !model.Saturday) ||
-                       (iterator.DayOfWeek == DayOfWeek.Sunday && !model.Sunday))
-                    {
-                        continue;
-                    }
-
-                    for (int i = 0; i < model.Quantity; i++)
-                    {
-                        dates.Add(iterator);
-                        try
-                        {
-                            var insert = true;
-                            if (((IntervalUnit)model.IntervalUnit) == IntervalUnit.Day)
-                            {
-                                if (reservations.Where(x => x.Resource == model.Resource && x.Date == iterator).Any())
-                                    insert = false;
-                            }
-                            if (insert)
-                            {
-                                if (counter++ > 1000)
-                                    break;
-
-                                await _productReservationService.InsertProductReservation(new ProductReservation {
-                                    OrderId = "",
-                                    Date = iterator,
-                                    ProductId = productId,
-                                    Resource = model.Resource,
-                                    Parameter = model.Parameter,
-                                    Duration = model.Interval + " " + ((IntervalUnit)model.IntervalUnit).GetLocalizedEnum(_localizationService, _workContext),
-                                });
-                            }
-                        }
-                        catch { }
-                    }
-                }
+                model.ProductId = productId;
+                await _productReservationService.InsertProductReservation(GenerateReservations(model, reservations));
 
                 ViewBag.RefreshPage = true;
             }
@@ -2340,13 +2244,96 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        protected IEnumerable<ProductReservation> GenerateReservations(ProductModel.GenerateCalendarModel model, IEnumerable<ProductReservation> reservations)
+        {
+            var _minutesToAdd = 0;
+            if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Minute)
+            {
+                _minutesToAdd = model.Interval;
+            }
+            else if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Hour)
+            {
+                _minutesToAdd = model.Interval * 60;
+            }
+            else if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
+            {
+                _minutesToAdd = model.Interval * 60 * 24;
+            }
+
+            var _hourFrom = model.StartTime.Hour;
+            var _minutesFrom = model.StartTime.Minute;
+            var _hourTo = model.EndTime.Hour;
+            var _minutesTo = model.EndTime.Minute;
+            var _dateFrom = new DateTime(model.StartDate.Value.Year, model.StartDate.Value.Month, model.StartDate.Value.Day, 0, 0, 0, 0);
+            var _dateTo = new DateTime(model.EndDate.Value.Year, model.EndDate.Value.Month, model.EndDate.Value.Day, 23, 59, 59, 999);
+
+            if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
+            {
+                model.Quantity = 1;
+            }
+
+            for (var iterator = _dateFrom; iterator <= _dateTo; iterator += new TimeSpan(0, _minutesToAdd, 0))
+            {
+                if ((IntervalUnit)model.IntervalUnit != IntervalUnit.Day)
+                {
+                    if (iterator.Hour >= _hourFrom && iterator.Hour <= _hourTo)
+                    {
+                        if (iterator.Hour == _hourTo)
+                        {
+                            if (iterator.Minute > _minutesTo)
+                            {
+                                continue;
+                            }
+                        }
+                        if (iterator.Hour == _hourFrom)
+                        {
+                            if (iterator.Minute < _minutesFrom)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                if ((iterator.DayOfWeek == DayOfWeek.Monday && !model.Monday) ||
+                   (iterator.DayOfWeek == DayOfWeek.Tuesday && !model.Tuesday) ||
+                   (iterator.DayOfWeek == DayOfWeek.Wednesday && !model.Wednesday) ||
+                   (iterator.DayOfWeek == DayOfWeek.Thursday && !model.Thursday) ||
+                   (iterator.DayOfWeek == DayOfWeek.Friday && !model.Friday) ||
+                   (iterator.DayOfWeek == DayOfWeek.Saturday && !model.Saturday) ||
+                   (iterator.DayOfWeek == DayOfWeek.Sunday && !model.Sunday))
+                {
+                    continue;
+                }
+
+                for (var i = 0; i < model.Quantity; i++)
+                {
+                    if (((IntervalUnit)model.IntervalUnit) == IntervalUnit.Day && reservations.Where(x => x.Resource == model.Resource && x.Date == iterator).Any())
+                    {
+                        continue;
+                    }
+
+                    yield return new ProductReservation 
+                    {
+                        OrderId = "",
+                        Date = iterator,
+                        ProductId = model.ProductId,
+                        Resource = model.Resource,
+                        Parameter = model.Parameter,
+                        Duration = model.Interval + " " + ((IntervalUnit)model.IntervalUnit).GetLocalizedEnum(_localizationService, _workContext),
+                    };
+                }
+            }
+        }
+
         public async Task<IActionResult> ClearCalendar(string productId, string resourceSystemName = null)
         {
             var toDelete = await _productReservationService.GetProductReservationsByProductId(productId, true, null, 0, int.MaxValue, !string.IsNullOrEmpty(resourceSystemName) ? resourceSystemName : null);
-            foreach (var record in toDelete)
-            {
-                await _productReservationService.DeleteProductReservation(record);
-            }
+            await _productReservationService.DeleteProductReservation(toDelete);
 
             return Json("");
         }
@@ -2354,10 +2341,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ClearOld(string productId, string resourceSystemName = null)
         {
             var toDelete = (await _productReservationService.GetProductReservationsByProductId(productId, true, null, 0, int.MaxValue, !string.IsNullOrEmpty(resourceSystemName) ? resourceSystemName : null)).Where(x => x.Date < DateTime.UtcNow);
-            foreach (var record in toDelete)
-            {
-                await _productReservationService.DeleteProductReservation(record);
-            }
+            await _productReservationService.DeleteProductReservation(toDelete);
 
             return Json("");
         }

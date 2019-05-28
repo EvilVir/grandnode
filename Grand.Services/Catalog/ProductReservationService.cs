@@ -46,6 +46,23 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
+        /// Deletes multiple product reservations at once
+        /// </summary>
+        /// <param name="productReservation">Product reservation</param>
+        public virtual async Task DeleteProductReservation(IEnumerable<ProductReservation> productReservations)
+        {
+            if (productReservations == null || !productReservations.Any())
+                throw new ArgumentNullException("productReservation");
+
+            await _productReservationRepository.DeleteAsyncById(productReservations.Select(x => x.Id));
+
+            foreach (var productReservation in productReservations)
+            {
+                await _eventPublisher.EntityDeleted(productReservation);
+            }
+        }
+
+        /// <summary>
         /// Gets product reservations for product Id
         /// </summary>
         /// <param name="productId">Product Id</param>
@@ -91,6 +108,23 @@ namespace Grand.Services.Catalog
 
             await _productReservationRepository.InsertAsync(productReservation);
             await _eventPublisher.EntityInserted(productReservation);
+        }
+
+        /// <summary>
+        /// Adds multiple product reservations at once
+        /// </summary>
+        /// <param name="productReservations">Product reservation</param>
+        public virtual async Task InsertProductReservation(IEnumerable<ProductReservation> productReservations)
+        {
+            if (productReservations == null || !productReservations.Any())
+                throw new ArgumentNullException("productAttribute");
+
+            await _productReservationRepository.InsertAsync(productReservations);
+
+            foreach (var productReservation in productReservations)
+            {
+                await _eventPublisher.EntityInserted(productReservation);
+            }
         }
 
         /// <summary>

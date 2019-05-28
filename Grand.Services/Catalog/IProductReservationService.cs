@@ -18,10 +18,22 @@ namespace Grand.Services.Catalog
         Task DeleteProductReservation(ProductReservation productReservation);
 
         /// <summary>
+        /// Deletes multiple product reservations at once
+        /// </summary>
+        /// <param name="productReservation">Ids of product reservations to delete</param>
+        Task DeleteProductReservation(IEnumerable<ProductReservation> productReservations);
+
+        /// <summary>
         /// Adds product reservation
         /// </summary>
         /// <param name="productReservation">Product reservation</param>
         Task InsertProductReservation(ProductReservation productReservation);
+
+        /// <summary>
+        /// Adds multiple product reservations at once
+        /// </summary>
+        /// <param name="productReservations">Product reservation</param>
+        Task InsertProductReservation(IEnumerable<ProductReservation> productReservationsGenerator);
 
         /// <summary>
         /// Updates product reservation
