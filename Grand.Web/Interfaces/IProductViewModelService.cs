@@ -26,7 +26,7 @@ namespace Grand.Web.Interfaces
 
         Task SendProductEmailAFriendMessage(Product product, ProductEmailAFriendModel model);
         Task SendProductAskQuestionMessage(Product product, ProductAskQuestionModel model);
-        Task<ProductDetailsAttributeChangeModel> PrepareProductDetailsAttributeChangeModel(Product product, bool validateAttributeConditions, bool loadPicture, IFormCollection form);
+        Task<ProductDetailsAttributeChangeModel> PrepareProductDetailsAttributeChangeModel(Product product, int quantity, bool validateAttributeConditions, bool loadPicture, IFormCollection form);
         Task<ProductAskQuestionModel> PrepareProductAskQuestionModel(Product product);
         Task<ProductAskQuestionSimpleModel> PrepareProductAskQuestionSimpleModel(Product product);
         Task<IList<ProductOverviewModel>> PrepareNewProductsDisplayedOnHomePage(int? productThumbPictureSize);

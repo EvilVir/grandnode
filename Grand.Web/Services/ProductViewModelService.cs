@@ -960,15 +960,28 @@ namespace Grand.Web.Services
             model.AddToCart.MeasureUnit = !String.IsNullOrEmpty(product.UnitId) ? (await _measureService.GetMeasureUnitById(product.UnitId)).Name : string.Empty;
 
             //allowed quantities
-            var allowedQuantities = product.ParseAllowedQuantities();
-            foreach (var qty in allowedQuantities)
+            if (product.ProductType != ProductType.Reservation)
             {
-                model.AddToCart.AllowedQuantities.Add(new SelectListItem {
-                    Text = qty.ToString(),
-                    Value = qty.ToString(),
-                    Selected = updatecartitem != null && updatecartitem.Quantity == qty
-                });
+                var allowedQuantities = product.ParseAllowedQuantities();
+                foreach (var qty in allowedQuantities)
+                {
+                    model.AddToCart.AllowedQuantities.Add(new SelectListItem {
+                        Text = qty.ToString(),
+                        Value = qty.ToString(),
+                        Selected = updatecartitem != null && updatecartitem.Quantity == qty
+                    });
+                }
             }
+            else if (product.Resources.Any())
+            {
+                model.AddToCart.AllowedQuantities = Enumerable.Range(1, product.Resources.Count)
+                                                              .Select(qty => new SelectListItem {
+                                                                  Text = qty.ToString(),
+                                                                  Value = qty.ToString(),
+                                                                  Selected = updatecartitem != null && updatecartitem.Quantity == qty
+                                                               }).ToList();
+            }
+
             //minimum quantity notification
             if (product.OrderMinimumQuantity > 1)
             {
@@ -1515,7 +1528,7 @@ namespace Grand.Web.Services
         }
 
         public virtual async Task<ProductDetailsAttributeChangeModel> PrepareProductDetailsAttributeChangeModel
-            (Product product, bool validateAttributeConditions, bool loadPicture, IFormCollection form)
+            (Product product, int quantity, bool validateAttributeConditions, bool loadPicture, IFormCollection form)
         {
             var model = new ProductDetailsAttributeChangeModel();
 
@@ -1541,13 +1554,13 @@ namespace Grand.Web.Services
                 var unitprice = await _priceCalculationService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
-                    1, attributeXml, 0,
+                    quantity, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
                     true);
 
                 decimal discountAmount = unitprice.discountAmount;
                 List<AppliedDiscount> scDiscounts = unitprice.appliedDiscounts;
-                decimal finalPrice = unitprice.unitprice;
+                decimal finalPrice = unitprice.unitprice * quantity;
                 var productprice = await _taxService.GetProductPrice(product, finalPrice);
                 decimal finalPriceWithDiscountBase = productprice.productprice;
                 decimal taxRate = productprice.taxRate;

@@ -188,13 +188,13 @@ namespace Grand.Web.Controllers
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
-        public virtual async Task<IActionResult> ProductDetails_AttributeChange(string productId, bool validateAttributeConditions, bool loadPicture, IFormCollection form)
+        public virtual async Task<IActionResult> ProductDetails_AttributeChange(string productId, int quantity, bool validateAttributeConditions, bool loadPicture, IFormCollection form)
         {
             var product = await _productService.GetProductById(productId);
             if (product == null)
                 return new NullJsonResult();
 
-            var model = await _productViewModelService.PrepareProductDetailsAttributeChangeModel(product, validateAttributeConditions, loadPicture, form);
+            var model = await _productViewModelService.PrepareProductDetailsAttributeChangeModel(product, quantity, validateAttributeConditions, loadPicture, form);
 
             return Json(new
             {

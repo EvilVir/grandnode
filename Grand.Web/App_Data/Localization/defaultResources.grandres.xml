@@ -4266,6 +4266,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Resources.AddNew">
     <Value>Add new resource</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.AllowReservationTimeOverlap">
+    <Value>Allow overlap</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>

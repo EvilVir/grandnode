@@ -16,8 +16,9 @@
     startDate: "",
     startDateMonth: "",
     startDateYear: "",
+    quantitySelector: null,
 
-    init: function init(startDate, startDateYear, startDateMonth, noReservationsMessage, ajaxUrl, productId, ajaxUrl2) {
+    init: function init(startDate, startDateYear, startDateMonth, noReservationsMessage, ajaxUrl, productId, ajaxUrl2, quantitySelector) {
         this.noReservationsMessage = noReservationsMessage;
         this.ajaxUrl = ajaxUrl;
         this.ajaxUrl2 = ajaxUrl2;
@@ -25,6 +26,7 @@
         this.startDate = startDate;
         this.startDateMonth = startDateMonth;
         this.startDateYear = startDateYear;
+        this.quantitySelector = quantitySelector;
 
         if (document.getElementById("reservationDatepicker") != null) {
             this.fillAvailableDates(startDateYear, startDateMonth, Reservation._parameter, false);
@@ -257,9 +259,12 @@
     },
 
     onDatePickerSelect: function onDatePickerSelect() {
+
+        var qty = Reservation.quantitySelector != null ? $('#' + Reservation.quantitySelector).val() : 1;
+
         $.ajax({
             cache: false,
-            url: Reservation.ajaxUrl2,
+            url: Reservation.ajaxUrl2.replace('QUANTITY_PLACEHOLDER', qty),
             data: $('#product-details-form').serialize(),
             type: 'post',
             success: function (data) {

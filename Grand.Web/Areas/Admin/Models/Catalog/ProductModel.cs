@@ -610,6 +610,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.SystemName")]
             public string SystemName { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.AllowReservationTimeOverlap")]
+            public bool AllowReservationTimeOverlap { get; set; }
         }
 
         public partial class SimilarProductModel : BaseGrandEntityModel

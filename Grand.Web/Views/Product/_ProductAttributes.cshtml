@@ -289,8 +289,7 @@
         </table>
     </div>
 }
-@if (Model.Any())
-{
+@{
     //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
     var attributesHaveAssociatedPictures = true;
@@ -298,9 +297,12 @@
     var attributeChangeScriptsBuilder = new StringBuilder();
     var productId = Model.First().ProductId;
     var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
+    var quantitySelectorId = string.Format("addtocart_{0}_EnteredQuantity", productId);
     if (dynamicPriceUpdate)
     {
         //generate change event script
+        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", quantitySelectorId, attributeChangeHandlerFuncName);
+
         foreach (var attribute in Model)
         {
             string controlId = string.Format("product_attribute_{0}", attribute.Id);
@@ -337,9 +339,12 @@
         //render scripts
         <script asp-location="Footer">
             function @(attributeChangeHandlerFuncName)() {
+
+                var qty = $('#@quantitySelectorId').val();
+
                 $.ajax({
                     cache: false,
-                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "product", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))',
+                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "product", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))&quantity=' + qty,
                     data: $('#product-details-form').serialize(),
                     type: 'post',
                     context: { product: '@productId' },
