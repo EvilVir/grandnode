@@ -2180,9 +2180,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Reservation
 
         [HttpPost]
-        public async Task<IActionResult> ListReservations(DataSourceRequest command, string productId, string resourceSystemName = null)
+        public async Task<IActionResult> ListReservations(DataSourceRequest command, string productId, string resourceSystemName = null, DateTime? dateFrom = null, DateTime? dateTo = null)
         {
-            var reservations = await _productReservationService.GetProductReservationsByProductId(productId, null, null, command.Page - 1, command.PageSize, !string.IsNullOrEmpty(resourceSystemName) ? resourceSystemName : null);
+            var reservations = await _productReservationService.GetProductReservationsByProductId(productId, null, dateFrom, dateTo, command.Page - 1, command.PageSize, !string.IsNullOrEmpty(resourceSystemName) ? resourceSystemName : null);
 
             var reservationModel = reservations
                 .Select(x => new ProductModel.ReservationModel

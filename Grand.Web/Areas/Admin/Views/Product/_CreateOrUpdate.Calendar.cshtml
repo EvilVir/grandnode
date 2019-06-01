@@ -6,8 +6,17 @@
     <vc:admin-widget widget-zone="product_details_calendar_top" additional-data="Model" />
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span>@T("Admin.Catalog.Products.Calendar.Resource"):</span>
-            <input id="reservations-resource" />
+
+            <span>
+                <span>@T("Admin.Catalog.Products.Calendar.Resource"):</span>
+                <input id="reservations-resource" />
+            </span>
+
+            <span style="padding-left: 20px;">
+                <span>@T("Admin.Catalog.Products.Calendar.Date"):</span>
+                <input id="reservations-filter-date-from" /> - <input id="reservations-filter-date-to" />
+            </span>
+
             <button id="btnReservationsResourceRefresh" type="button" class="btn k-pager-refresh k-link" aria-label="Refresh" href="#"><span class="k-icon k-i-reload"></span></button>
         </div>
         <div class="panel-body">
@@ -29,7 +38,8 @@
             // Buttons
             $('#generateCalendar').click(function (e) {
                 e.preventDefault();
-                OpenWindow('@Html.Raw(Url.Action("GenerateCalendarPopup", "Product", new { productId = Model.Id, btnId = "btnReservationsResourceRefresh", formId = "product-form" }))' + '&resourceSystemName=' + getSelectedResource(), 800, 600, true);
+                var baseUrl = '@Html.Raw(Url.Action("GenerateCalendarPopup", "Product", new { productId = Model.Id, btnId = "btnReservationsResourceRefresh", formId = "product-form" }))';
+                OpenWindow(baseUrl + '&resourceSystemName=' + getSelectedResource(), 800, 600, true);
                 return false;
             });
 
@@ -87,16 +97,36 @@
                 return $("#reservations-resource").data("kendoDropDownList").value();
             }
 
+            function getSelectedFromDate() {
+                return $("#reservations-filter-date-from").data("kendoDatePicker").value();
+            }
+
+            function getSelectedToDate() {
+                return $("#reservations-filter-date-to").data("kendoDatePicker").value();
+            }
+
             function onResourceDataBound(e) {
-                reloadGrid(getSelectedResource());
+                reloadGrid(getSelectedResource(), getSelectedFromDate(), getSelectedToDate());
             };
 
             function onResourceSelect(e) {
-                reloadGrid(e.dataItem ? e.dataItem.SystemName : null);
+                reloadGrid(e.dataItem ? e.dataItem.SystemName : null, getSelectedFromDate(), getSelectedToDate());
             };
 
-            function reloadGrid(resource) {
-                var newUrl = calendarGridBaseUrl + (resource ? "&resourceSystemName=" + resource : "");
+            function onDateFromFilterChange() {
+                reloadGrid(getSelectedResource(), this.value(), getSelectedToDate());
+            }
+
+            function onDateToFilterChange() {
+                reloadGrid(getSelectedResource(), getSelectedFromDate(), this.value());
+            }
+
+            function reloadGrid(resource, dateFrom, dateTo) {
+
+                var newUrl = calendarGridBaseUrl + (resource ? "&resourceSystemName=" + resource : "") +
+                    (dateFrom ? "&dateFrom=" + kendo.toString(dateFrom, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern") : "") +
+                    (dateTo ? "&dateTo=" + kendo.toString(dateTo, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern") : "");
+
                 var dataSource = $("#reservations-grid").data("kendoGrid").dataSource;
                 dataSource.transport.options.read.url = newUrl;
                 dataSource.read();
@@ -121,6 +151,15 @@
                         data: "Data",
                     }
                 }
+            });
+
+            // Date pickers
+            $("#reservations-filter-date-from").kendoDatePicker({
+                change: onDateFromFilterChange,
+            });
+
+            $("#reservations-filter-date-to").kendoDatePicker({
+                change: onDateToFilterChange,
             });
 
             $("#btnReservationsResourceRefresh").click(function (e) {
