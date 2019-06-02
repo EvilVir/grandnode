@@ -49,8 +49,7 @@
                             id: "Id",
                             fields: {
                                 Name: { editable: true, type: "string" },
-                                SystemName: { editable: true, type: "string" },
-                                AllowReservationTimeOverlap: { editable: true, type: "boolean" }
+                                SystemName: { editable: true, type: "string" }
                             }
                         }
                     },
@@ -88,10 +87,6 @@
                     field: "SystemName",
                     title: "@T("Admin.Catalog.Products.Resources.Fields.SystemName")",
                     template: '#=SystemName#',
-                }, {
-                    field: "AllowReservationTimeOverlap",
-                    title: "@T("Admin.Catalog.Products.Resources.Fields.AllowReservationTimeOverlap")",
-                    template: '<input type="checkbox" #= AllowReservationTimeOverlap ? "checked=checked" : "" # disabled="disabled"/>'
                 }, {
                     command: [{
                         name: "edit",

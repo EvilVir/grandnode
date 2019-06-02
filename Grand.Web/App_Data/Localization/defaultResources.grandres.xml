@@ -4266,9 +4266,6 @@
   <LocaleResource Name="Admin.Catalog.Products.Resources.AddNew">
     <Value>Add new resource</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.AllowReservationTimeOverlap">
-    <Value>Allow overlap</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -11856,6 +11853,9 @@
   <LocaleResource Name="Admin.Dashboard.ReportOverviewHelper">
     <Value>report overview...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ReservationsGantt">
+    <Value>Reservations</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.Statistics">
     <Value>Statistics</Value>
   </LocaleResource>
@@ -19236,6 +19236,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Reservationdatesmustbelaterthantoday">
     <Value>Reservation date must be later than today</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.DateCanBeInPast">
+    <Value>Reservation date can't be in past</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Reservationdeleted">
     <Value>Reservation was deleted</Value>

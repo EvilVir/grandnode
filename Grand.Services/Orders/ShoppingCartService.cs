@@ -814,7 +814,7 @@ namespace Grand.Services.Orders
                         }
                     }
 
-                    if (shoppingCartItem.RentalStartDateUtc.Value < DateTime.Now || shoppingCartItem.RentalEndDateUtc.Value < DateTime.Now)
+                    if (shoppingCartItem.RentalStartDateUtc.Value < DateTime.Now.AddDays(product.IntervalUnitType == IntervalUnit.Day ? -1 : 0) || shoppingCartItem.RentalEndDateUtc.Value < DateTime.Now.AddDays(product.IntervalUnitType == IntervalUnit.Day ? -1 : 0))
                     {
                         warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDatesMustBeLaterThanToday"));
                     }
@@ -1163,10 +1163,10 @@ namespace Grand.Services.Orders
                 return warnings;
             }
 
-            IGrouping<string, ProductReservation> groupToBook = null;
+            var groupsToBook = new Dictionary<string, List<ProductReservation>>();
             if (rentalStartDate.HasValue && rentalEndDate.HasValue)
             {
-                var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
+                var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, rentalStartDate, rentalEndDate);
                 var reserved = await _productReservationService.GetCustomerReservationsHelpers();
                 foreach (var item in reserved)
                 {
@@ -1177,40 +1177,46 @@ namespace Grand.Services.Orders
                     }
                 }
 
-                var grouped = reservations.GroupBy(x => x.Resource);
-                foreach (var group in grouped)
+                var grouped = reservations.GroupBy(x => x.Resource).ToDictionary(k => k.Key, v => v.ToList());
+
+                for (var i = 0; i < quantity; i++)
                 {
-                    bool groupCanBeBooked = true;
-                    if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
+                    var visited = groupsToBook.Keys.ToList();
+
+                    foreach (var group in grouped.Where(x => !visited.Contains(x.Key)))
                     {
-                        for (DateTime iterator = rentalStartDate.Value; iterator <= rentalEndDate.Value; iterator += new TimeSpan(24, 0, 0))
+                        bool groupCanBeBooked = true;
+                        if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
                         {
-                            if (!group.Select(x => x.Date).Contains(iterator))
+                            for (DateTime iterator = rentalStartDate.Value; iterator <= rentalEndDate.Value; iterator += new TimeSpan(24, 0, 0))
                             {
-                                groupCanBeBooked = false;
-                                break;
+                                if (!group.Value.Select(x => x.Date).Contains(iterator))
+                                {
+                                    groupCanBeBooked = false;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        for (DateTime iterator = rentalStartDate.Value; iterator < rentalEndDate.Value; iterator += new TimeSpan(24, 0, 0))
+                        else
                         {
-                            if (!group.Select(x => x.Date).Contains(iterator))
+                            for (DateTime iterator = rentalStartDate.Value; iterator < rentalEndDate.Value; iterator += new TimeSpan(24, 0, 0))
                             {
-                                groupCanBeBooked = false;
-                                break;
+                                if (!group.Value.Select(x => x.Date).Contains(iterator))
+                                {
+                                    groupCanBeBooked = false;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (groupCanBeBooked)
-                    {
-                        groupToBook = group;
-                        break;
+                        if (groupCanBeBooked)
+                        {
+                            groupsToBook.Add(group.Key, group.Value);
+                            break;
+                        }
                     }
                 }
 
-                if (groupToBook == null)
+                if (groupsToBook.Count != quantity)
                 {
                     warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.NoFreeReservationsInThisPeriod"));
                     return warnings;
@@ -1310,30 +1316,34 @@ namespace Grand.Services.Orders
                 }
             }
 
-            if (!warnings.Any() && groupToBook != null)
+            if (!warnings.Any() && groupsToBook.Any())
             {
                 if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
                 {
-                    foreach (var item in groupToBook.Where(x => x.Date >= rentalStartDate && x.Date <= rentalEndDate))
+                    foreach (var groupToBook in groupsToBook.Values)
                     {
-                        await _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper
+                        foreach (var item in groupToBook.Where(x => x.Date >= rentalStartDate && x.Date <= rentalEndDate))
                         {
-                            CustomerId = customer.Id,
-                            ReservationId = item.Id,
-                            ShoppingCartItemId = shoppingCartItem.Id
-                        });
+                            await _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper {
+                                CustomerId = customer.Id,
+                                ReservationId = item.Id,
+                                ShoppingCartItemId = shoppingCartItem.Id,
+                            });
+                        }
                     }
                 }
                 else
                 {
-                    foreach (var item in groupToBook.Where(x => x.Date >= rentalStartDate && x.Date < rentalEndDate))
+                    foreach (var groupToBook in groupsToBook.Values)
                     {
-                        await _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper
+                        foreach (var item in groupToBook.Where(x => x.Date >= rentalStartDate && x.Date < rentalEndDate))
                         {
-                            CustomerId = customer.Id,
-                            ReservationId = item.Id,
-                            ShoppingCartItemId = shoppingCartItem.Id
-                        });
+                            await _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper {
+                                CustomerId = customer.Id,
+                                ReservationId = item.Id,
+                                ShoppingCartItemId = shoppingCartItem.Id
+                            });
+                        }
                     }
                 }
             }

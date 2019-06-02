@@ -1442,8 +1442,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 product.Resources.Add(new Resource() {
                     Name = model.Name,
-                    SystemName = model.SystemName,
-                    AllowReservationTimeOverlap = model.AllowReservationTimeOverlap
+                    SystemName = model.SystemName
                 });
             }
 
@@ -1459,7 +1458,6 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 existingResource.Name = model.Name;
                 existingResource.SystemName = model.SystemName;
-                existingResource.AllowReservationTimeOverlap = model.AllowReservationTimeOverlap;
             }
 
             await _productService.UpdateProduct(product);

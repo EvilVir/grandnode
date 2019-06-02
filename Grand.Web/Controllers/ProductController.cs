@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Grand.Web.Controllers
 {
@@ -872,23 +873,57 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> GetDatesForMonth(string productId, int month, string parameter, int year, [FromServices] IProductReservationService productReservationService)
         {
-            var emptySlots = (await productReservationService.GetProductReservationsByProductId(productId, true, new DateTime(year, month, 1), new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59, 999)))
-                                .Where(x => x.Date >= DateTime.UtcNow)
-                                .Where(x => parameter == null || x.Parameter == parameter)
-                                .ToList();
+            var allReservations = await productReservationService.GetProductReservationsByProductId(productId, true, null);
+            var query = allReservations.Where(x => x.Date.Month == month && x.Date.Year == year && x.Date >= DateTime.UtcNow);
+            if (!string.IsNullOrEmpty(parameter))
+            {
+                query = query.Where(x => x.Parameter == parameter);
+            }
 
+            var reservations = query.ToList();
             var inCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id)
-                                             .Where(x => !string.IsNullOrEmpty(x.ReservationId))
-                                             .Select(x => x.ReservationId)
-                                             .ToList();
+                .Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
 
-            emptySlots = emptySlots.Where(x => !inCart.Contains(x.Id))
-                                   .GroupBy(x => x.Date)
-                                   .Select(x => x.First())
-                                   .ToList();
+            foreach (var cartItem in inCart)
+            {
+                var match = reservations.FirstOrDefault(x => x.Id == cartItem.ReservationId);
+                if (match != null)
+                {
+                    reservations.Remove(match);
+                }
+            }
 
-            return Json(emptySlots);
+            var toReturn = reservations.GroupBy(x => x.Date).Select(x => x.First()).ToList();
+
+            return Json(toReturn);
         }
+
+        public virtual async Task<IActionResult> GetInactiveDatesForMonth(string productId, int quantity, int month, int year, int monthOffset, [FromServices] IProductReservationService productReservationService)
+        {
+            if (month > 0 && year > 0)
+            {
+                var startDate = new DateTime(year, month, 1, 0, 0, 0, 0).AddMonths(-monthOffset); // Requested month minus monthOffset number of months (typically 1) to cover days from previous month
+                var endDate = new DateTime(year, month, 1, 0, 0, 0, 0).AddMonths(1 + monthOffset); // Requrest month plus one (so end of the month) plus monthOffset number of months (typically 1) to cover days from next month
+
+                var maxQuantity = (await _productService.GetProductById(productId))?.Resources?.Count ?? 0;
+                var inactiveDates = (await productReservationService.GetProductReservationsByProductId(productId, false, startDate, endDate))
+                                        .GroupBy(x => x.Date)
+                                        .Where(x => x.Count() + quantity > maxQuantity)
+                                        .Select(x => x.Key)
+                                        .ToHashSet();
+
+                var maxDate = new DateTime(Math.Min(DateTime.Now.Ticks, endDate.Ticks));
+                for (var pastDate = startDate; pastDate < maxDate; pastDate += TimeSpan.FromDays(1))
+                {
+                    inactiveDates.Add(pastDate);
+                }
+
+                return Json(inactiveDates.OrderBy(x => x).Select(x => x.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
+            }
+
+            return Json(new List<ProductReservation>());
+        }
+
         #endregion
     }
 }

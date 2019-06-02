@@ -298,10 +298,13 @@
     var productId = Model.First().ProductId;
     var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
     var quantitySelectorId = string.Format("addtocart_{0}_EnteredQuantity", productId);
+    var datePickerRangeId = string.Format("reservationDatepickerRange_{0}", productId);
+
     if (dynamicPriceUpdate)
     {
         //generate change event script
         attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", quantitySelectorId, attributeChangeHandlerFuncName);
+        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", datePickerRangeId, attributeChangeHandlerFuncName);
 
         foreach (var attribute in Model)
         {

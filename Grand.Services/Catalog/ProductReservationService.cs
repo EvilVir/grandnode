@@ -152,6 +152,23 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
+        /// Updates product reservation
+        /// </summary>
+        /// <param name="productReservation">Product reservation</param>
+        public virtual async Task UpdateProductReservation(IEnumerable<ProductReservation> productReservations)
+        {
+            if (productReservations == null)
+                throw new ArgumentNullException("productAttribute");
+
+            await _productReservationRepository.UpdateAsync(productReservations);
+
+            foreach (var productReservation in productReservations)
+            {
+                await _eventPublisher.EntityInserted(productReservation);
+            }
+        }
+
+        /// <summary>
         /// Gets product reservation for specified Id
         /// </summary>
         /// <param name="Id">Product Id</param>

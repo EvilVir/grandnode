@@ -14,17 +14,23 @@
     {
         Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/style.rtl.css", themeName));
     }
-    
+
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
     Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/materialdesigniconsSlim.min.css", themeName));
     Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/js-offcanvas.css", themeName));
     Html.AppendCssFileParts(ResourceLocation.Head, "~/content/magnific-popup/magnific-popup.css");
     Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/animate.min.css", themeName));
     Html.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/bootstrap.min.css");
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/datepicker/bootstrap-datepicker.min.css");
+
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.magnific-popup.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.actions.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.search.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/datepicker/bootstrap-datepicker.noconflict.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, string.Format("~/content/bootstrap/datepicker/locales/bootstrap-datepicker.{0}.min.js", this.WorkingLanguage().ToLowerInvariant()));
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/datepicker/bootstrap-datepicker.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/moment.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/popper.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.countdown.min.js");
@@ -37,5 +43,4 @@
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-3.3.1.min.js");
-
 }

@@ -1359,65 +1359,76 @@ namespace Grand.Services.Orders
 
                                 if (sc.RentalStartDateUtc.HasValue && sc.RentalEndDateUtc.HasValue)
                                 {
-                                    var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
-                                    var grouped = reservations.GroupBy(x => x.Resource);
+                                    var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, sc.RentalStartDateUtc, sc.RentalEndDateUtc);
+                                    var grouped = reservations.GroupBy(x => x.Resource).ToDictionary(k => k.Key, v => v.ToList());
 
-                                    IGrouping<string, ProductReservation> groupToBook = null;
-                                    foreach (var group in grouped)
+                                    var groupsToBook = new Dictionary<string, List<ProductReservation>>();
+
+                                    for (var i = 0; i < sc.Quantity; i++)
                                     {
-                                        bool groupCanBeBooked = true;
-                                        if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
+                                        var visited = groupsToBook.Keys.ToList();
+
+                                        foreach (var group in grouped.Where(x => !visited.Contains(x.Key)))
                                         {
-                                            for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator <= sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
+                                            bool groupCanBeBooked = true;
+                                            if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
                                             {
-                                                if (!group.Select(x => x.Date).Contains(iterator))
+                                                for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator <= sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
                                                 {
-                                                    groupCanBeBooked = false;
-                                                    break;
+                                                    if (!group.Value.Select(x => x.Date).Contains(iterator))
+                                                    {
+                                                        groupCanBeBooked = false;
+                                                        break;
+                                                    }
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator < sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
+                                            else
                                             {
-                                                if (!group.Select(x => x.Date).Contains(iterator))
+                                                for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator < sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
                                                 {
-                                                    groupCanBeBooked = false;
-                                                    break;
+                                                    if (!group.Value.Select(x => x.Date).Contains(iterator))
+                                                    {
+                                                        groupCanBeBooked = false;
+                                                        break;
+                                                    }
                                                 }
                                             }
-                                        }
-                                        if (groupCanBeBooked)
-                                        {
-                                            groupToBook = group;
-                                            break;
+                                            if (groupCanBeBooked)
+                                            {
+                                                groupsToBook.Add(group.Key, group.Value);
+                                                break;
+                                            }
                                         }
                                     }
 
-                                    if (groupToBook == null)
+                                    if (groupsToBook.Count != sc.Quantity)
                                     {
                                         throw new Exception("ShoppingCart.Reservation.Nofreereservationsinthisperiod");
                                     }
                                     else
                                     {
-                                        var temp = groupToBook.AsQueryable();
-                                        if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
+                                        foreach (var groupToBook in groupsToBook)
                                         {
-                                            temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date <= sc.RentalEndDateUtc);
-                                        }
-                                        else
-                                        {
-                                            temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date < sc.RentalEndDateUtc);
-                                        }
+                                            var temp = groupToBook.Value.AsQueryable();
 
-                                        foreach (var item in temp)
-                                        {
-                                            item.OrderId = order.OrderGuid.ToString();
-                                            await _productReservationService.UpdateProductReservation(item);
-                                        }
+                                            if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
+                                            {
+                                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date <= sc.RentalEndDateUtc);
+                                            }
+                                            else
+                                            {
+                                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date < sc.RentalEndDateUtc);
+                                            }
 
-                                        reservationsToUpdate.AddRange(temp);
+                                            foreach (var item in temp)
+                                            {
+                                                item.OrderId = order.OrderGuid.ToString();
+                                            }
+
+                                            await _productReservationService.UpdateProductReservation(temp);
+
+                                            reservationsToUpdate.AddRange(temp);
+                                        }
                                     }
                                 }
                             }

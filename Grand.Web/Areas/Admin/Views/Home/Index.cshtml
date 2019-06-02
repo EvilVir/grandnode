@@ -238,6 +238,20 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light bordered">
+                <div class="x_title">
+                    <h2 class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ReservationsGantt")</h2>
+                    <div class="clear"></div>
+                </div>
+                <div class="x_content">
+                    @await Component.InvokeAsync("ReservationsGantt")
+                </div>
+            </div>
+        </div>
+    </div>
 }
 <vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null" />
 <script type="text/javascript">

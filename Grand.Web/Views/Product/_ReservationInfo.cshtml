@@ -1,7 +1,8 @@
 ﻿@model ProductDetailsModel
 @using System.Globalization
 @inject CatalogSettings catalogSettings
-@{
+@if (Model.IntervalUnit != IntervalUnit.Day)
+{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.reservation.js");
     Html.AddCssFileParts("~/content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css");
 }
@@ -21,13 +22,21 @@
 
         @if (Model.IntervalUnit == IntervalUnit.Day)
         {
-            <div>
-                <h5>@T("Products.Reservation.DateFrom"):</h5>
-                <input name="reservationDatepickerFrom_@Model.Id" id="reservationDatepickerFrom" class="form-control datepicker" />
-            </div>
-            <div>
-                <h5>@T("Products.Reservation.DateTo"):</h5>
-                <input name="reservationDatepickerTo_@Model.Id" id="reservationDatepickerTo" class="form-control datepicker" />
+            <div style="position: relative;">
+                <h5>@T("Products.Reservation.Date")</h5>
+
+                <div id="reservationDatepickerRange_@Model.Id">
+                    <div id="reservationDatepickerRangeStart_@Model.Id"></div>
+                    <div id="reservationDatepickerRangeEnd_@Model.Id"></div>
+
+                    <div id="reservationDatepickerRangeProgress_@Model.Id" class="progress" style="display: none;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+
+
+                <input type="hidden" name="reservationDatepickerFrom_@Model.Id" id="reservationDatepickerFrom_@Model.Id" />
+                <input type="hidden" name="reservationDatepickerTo_@Model.Id" id="reservationDatepickerTo_@Model.Id" />
             </div>
         }
         else
@@ -43,10 +52,95 @@
         }
     </div>
 
-<script asp-location="Footer">
-    $(document).ready(function () {
-        Reservation.init("@Model.StartDate.ToString("d", CultureInfo.CreateSpecificCulture("en-US"))", "@Model.StartDate.Year", "@Model.StartDate.Month", "@T("Products.Noavailablereservations")",
-            "@(Url.Action("GetDatesForMonth", "Product"))", "@Model.Id",
-            "@Html.Raw(Url.Action("productdetails_attributechange", "product", new { productId = Model.Id, validateAttributeConditions = false, quantity = "QUANTITY_PLACEHOLDER" }))", "@(string.Format("addtocart_{0}_EnteredQuantity", Model.Id))");
-    });
-</script>
+@if (Model.IntervalUnit != IntervalUnit.Day)
+{
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            Reservation.init("@Model.StartDate.ToString("d", CultureInfo.CreateSpecificCulture("en-US"))", "@Model.StartDate.Year", "@Model.StartDate.Month", "@T("Products.Noavailablereservations")",
+                "@(Url.Action("GetDatesForMonth", "Product"))", "@Model.Id",
+                "@Html.Raw(Url.Action("productdetails_attributechange", "product", new { productId = Model.Id, validateAttributeConditions = false }))");
+        });
+    </script>
+}
+else
+{
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            var datePickersGroup = $("#reservationDatepickerRange_@(Model.Id)");
+            var startDatePicker = $("#reservationDatepickerRangeStart_@(Model.Id)");
+            var endDatePicker = $("#reservationDatepickerRangeEnd_@(Model.Id)");
+            var startDateValueField = $('#reservationDatepickerFrom_@(Model.Id)');
+            var endDateValueField = $('#reservationDatepickerTo_@(Model.Id)');
+            var progressBar = $('#reservationDatepickerRangeProgress_@(Model.Id)');
+            var quantitySelector = $('#addtocart_@(Model.Id)_EnteredQuantity');
+            var serverDatesFormat = 'MM/DD/YYYY';
+            var getDatesForMonthUrl = '@Html.Raw(Url.Action("GetInactiveDatesForMonth", "Product", new { productId = Model.Id, monthOffset = 1, quantity = "PLACEHOLDER_QUANTITY", month = "PLACEHOLDER_MONTH", year = "PLACEHOLDER_YEAR"  }))';
+
+            datePickersGroup.bootstrapDatepicker({
+                inputs: [startDatePicker, endDatePicker],
+                language: '@(WorkingLanguage().ToLowerInvariant())',
+                autoclose: false,
+                clearBtn: true,
+                todayBtn: false,
+                todayHighlight: false,
+                weekStart: 1
+            }).on('changeDate', function (e) {
+                var startDate = startDatePicker.bootstrapDatepicker('getDate');
+                var endDate = endDatePicker.bootstrapDatepicker('getDate');
+
+                startDate = startDate ? moment(startDate).format(serverDatesFormat) : null;
+                endDate = endDate ? moment(endDate).format(serverDatesFormat) : null;
+
+                startDateValueField.val(startDate);
+                endDateValueField.val(endDate);
+                datePickersGroup.trigger('change');
+            });
+
+            startDatePicker.css('display', 'none');
+
+            endDatePicker.on('changeMonth', function (e) {
+                var d = e.date;
+
+                if (d) {
+                    var url = getDatesForMonthUrl.replace('PLACEHOLDER_QUANTITY', quantitySelector.val())
+                        .replace('PLACEHOLDER_MONTH', d.getMonth() + 1)
+                        .replace('PLACEHOLDER_YEAR', d.getFullYear());
+
+                    datePickersGroup.find('table.table-condensed').css('visibility', 'hidden');
+                    progressBar.show();
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: url,
+                        dataType: 'json',
+                        data: {},
+                    }).done(function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            data[i] = moment.utc(data[i], 'YYYY-MM-DD').toDate();
+                        }
+
+                        startDatePicker.bootstrapDatepicker('setDatesDisabled', data);
+                        startDatePicker.bootstrapDatepicker('_setDate', d, 'view');
+
+                        endDatePicker.bootstrapDatepicker('setDatesDisabled', data);
+                        endDatePicker.bootstrapDatepicker('_setDate', d, 'view');
+
+                    }).fail(function () {
+
+                        alert("Error");
+
+                    }).always(function () {
+
+                        datePickersGroup.find('table.table-condensed').css('visibility', 'visible');
+                        progressBar.hide();
+
+                    });
+                }
+            }).trigger({ type: 'changeMonth', date: endDatePicker.bootstrapDatepicker('getViewDate') });
+
+            quantitySelector.on('change', function () { endDatePicker.trigger({ type: 'changeMonth', date: endDatePicker.bootstrapDatepicker('getViewDate') }) });
+        });
+    </script>
+}

@@ -33,13 +33,19 @@ namespace Grand.Services.Catalog
         /// Adds multiple product reservations at once
         /// </summary>
         /// <param name="productReservations">Product reservation</param>
-        Task InsertProductReservation(IEnumerable<ProductReservation> productReservationsGenerator);
+        Task InsertProductReservation(IEnumerable<ProductReservation> productReservations);
 
         /// <summary>
         /// Updates product reservation
         /// </summary>
         /// <param name="productReservation">Product reservation</param>
         Task UpdateProductReservation(ProductReservation productReservation);
+
+        /// <summary>
+        /// Updates product reservation
+        /// </summary>
+        /// <param name="productReservation">Product reservation</param>
+        Task UpdateProductReservation(IEnumerable<ProductReservation> productReservations);
 
         /// <summary>
         /// Gets product reservations for product Id
