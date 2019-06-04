@@ -49,6 +49,10 @@
         <h5 class="order-number">
             <strong>@T("Order.Order#")@Model.OrderNumber</strong>
         </h5>
+        <h5 class="order-short-id">
+            <strong>@T("Order.ShortId"): @Model.ShortId</strong><br />
+            <small>@T("Order.ShortId.ApplicationCode")</small>
+        </h5>
         <div class="order-date">
             @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
         </div>

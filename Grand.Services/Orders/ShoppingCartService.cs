@@ -1264,8 +1264,8 @@ namespace Grand.Services.Orders
                     AttributesXml = attributesXml,
                     CustomerEnteredPrice = customerEnteredPrice,
                     Quantity = quantity,
-                    RentalStartDateUtc = rentalStartDate,
-                    RentalEndDateUtc = rentalEndDate,
+                    RentalStartDateUtc = rentalStartDate?.Add(product.ReservationStartDelta),
+                    RentalEndDateUtc = rentalEndDate?.Add(product.ReservationEndDelta),
                     AdditionalShippingChargeProduct = product.AdditionalShippingCharge,
                     IsFreeShipping = product.IsFreeShipping,
                     IsRecurring = product.IsRecurring,
@@ -1389,8 +1389,8 @@ namespace Grand.Services.Orders
                     shoppingCartItem.Quantity = quantity;
                     shoppingCartItem.AttributesXml = attributesXml;
                     shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
-                    shoppingCartItem.RentalStartDateUtc = rentalStartDate;
-                    shoppingCartItem.RentalEndDateUtc = rentalEndDate;
+                    shoppingCartItem.RentalStartDateUtc = rentalStartDate?.Add(product.ReservationStartDelta);
+                    shoppingCartItem.RentalEndDateUtc = rentalEndDate?.Add(product.ReservationEndDelta);
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                     shoppingCartItem.AdditionalShippingChargeProduct = product.AdditionalShippingCharge;
                     shoppingCartItem.IsFreeShipping = product.IsFreeShipping;

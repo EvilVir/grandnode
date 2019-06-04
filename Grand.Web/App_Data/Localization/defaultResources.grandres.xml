@@ -17539,6 +17539,12 @@
   <LocaleResource Name="Order.OrderStatus">
     <Value>Order Status</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.ShortId">
+    <Value>Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShortId.ApplicationCode">
+    <Value>This code can be used to reference the order</Value>
+  </LocaleResource>
   <LocaleResource Name="Order.OrderTotal">
     <Value>Order Total</Value>
   </LocaleResource>

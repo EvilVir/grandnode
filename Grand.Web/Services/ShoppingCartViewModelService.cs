@@ -1093,11 +1093,11 @@ namespace Grand.Web.Services
             {
                 if (endDate == default(DateTime) || endDate == null)
                 {
-                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), startDate?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), startDate?.Add(product.ReservationStartDelta).ToString(_shoppingCartSettings.ReservationDateFormat));
                 }
                 else
                 {
-                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), startDate?.ToString(_shoppingCartSettings.ReservationDateFormat), endDate?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), startDate?.Add(product.ReservationStartDelta).ToString(_shoppingCartSettings.ReservationDateFormat), endDate?.Add(product.ReservationEndDelta).ToString(_shoppingCartSettings.ReservationDateFormat));
                 }
 
                 if (!string.IsNullOrEmpty(parameter))

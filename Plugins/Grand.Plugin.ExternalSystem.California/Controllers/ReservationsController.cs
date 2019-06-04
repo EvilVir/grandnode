@@ -71,7 +71,7 @@ namespace Grand.Plugin.ExternalSystem.California.Controllers
                                         Longitude = resource.Longitude,
                                         Quantity = 1,
                                         Start = resourceGroup.Value.StartDate.Add(product.ReservationStartDelta),
-                                        End = resourceGroup.Value.EndDate.Add(product.ReservationEndDelta),
+                                        End = resourceGroup.Value.EndDate.AddDays(product.IncBothDate ? 0 : 1).Add(product.ReservationEndDelta),
                                         MaxUses = null,
                                     };
 

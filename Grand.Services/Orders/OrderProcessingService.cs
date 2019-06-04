@@ -1362,7 +1362,10 @@ namespace Grand.Services.Orders
 
                                 if (sc.RentalStartDateUtc.HasValue && sc.RentalEndDateUtc.HasValue)
                                 {
-                                    var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, sc.RentalStartDateUtc, sc.RentalEndDateUtc);
+                                    var startAdjustment = product.IntervalUnitType == IntervalUnit.Day ? product.ReservationStartDelta : TimeSpan.FromSeconds(0);
+                                    var endAdjustment = product.IntervalUnitType == IntervalUnit.Day ? product.ReservationEndDelta : TimeSpan.FromSeconds(0);
+
+                                    var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, sc.RentalStartDateUtc?.Subtract(startAdjustment), sc.RentalEndDateUtc?.Subtract(endAdjustment));
                                     var grouped = reservations.GroupBy(x => x.Resource).ToDictionary(k => k.Key, v => v.ToList());
 
                                     var groupsToBook = new Dictionary<string, List<ProductReservation>>();
@@ -1376,7 +1379,7 @@ namespace Grand.Services.Orders
                                             bool groupCanBeBooked = true;
                                             if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
                                             {
-                                                for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator <= sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
+                                                for (DateTime iterator = sc.RentalStartDateUtc.Value.Subtract(startAdjustment); iterator <= sc.RentalEndDateUtc.Value.Subtract(endAdjustment); iterator += new TimeSpan(24, 0, 0))
                                                 {
                                                     if (!group.Value.Select(x => x.Date).Contains(iterator))
                                                     {
@@ -1387,7 +1390,7 @@ namespace Grand.Services.Orders
                                             }
                                             else
                                             {
-                                                for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator < sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
+                                                for (DateTime iterator = sc.RentalStartDateUtc.Value.Subtract(startAdjustment); iterator < sc.RentalEndDateUtc.Value.Subtract(endAdjustment); iterator += new TimeSpan(24, 0, 0))
                                                 {
                                                     if (!group.Value.Select(x => x.Date).Contains(iterator))
                                                     {
@@ -1406,7 +1409,7 @@ namespace Grand.Services.Orders
 
                                     if (groupsToBook.Count != sc.Quantity)
                                     {
-                                        throw new Exception("ShoppingCart.Reservation.Nofreereservationsinthisperiod");
+                                        throw new Exception(_localizationService.GetResource("ShoppingCart.Reservation.Nofreereservationsinthisperiod"));
                                     }
                                     else
                                     {
@@ -1416,11 +1419,11 @@ namespace Grand.Services.Orders
 
                                             if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
                                             {
-                                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date <= sc.RentalEndDateUtc);
+                                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc.Value.Subtract(startAdjustment) && x.Date <= sc.RentalEndDateUtc.Value.Subtract(endAdjustment));
                                             }
                                             else
                                             {
-                                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date < sc.RentalEndDateUtc);
+                                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc.Value.Subtract(startAdjustment) && x.Date < sc.RentalEndDateUtc.Value.Subtract(endAdjustment));
                                             }
 
                                             foreach (var item in temp)

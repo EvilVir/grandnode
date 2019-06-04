@@ -165,6 +165,7 @@ namespace Grand.Web.Services
 
             model.Id = order.Id;
             model.OrderNumber = order.OrderNumber;
+            model.ShortId = order.ShortId;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
