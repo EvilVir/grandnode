@@ -616,6 +616,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.SystemName")]
             public string SystemName { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.Latitude")]
+            public double Latitude { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.Longitude")]
+            public double Longitude { get; set; }
         }
 
         public partial class SimilarProductModel : BaseGrandEntityModel

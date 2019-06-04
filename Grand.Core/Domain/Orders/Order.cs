@@ -27,6 +27,11 @@ namespace Grand.Core.Domain.Orders
         public Guid OrderGuid { get; set; }
 
         /// <summary>
+        /// Short identificator that can be used in client's e-mails etc.
+        /// </summary>
+        public string ShortId { get; set; }
+
+        /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
         public int OrderNumber { get; set; }
@@ -318,6 +323,8 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the date and time of order creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been imported

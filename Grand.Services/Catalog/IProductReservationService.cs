@@ -58,6 +58,8 @@ namespace Grand.Services.Catalog
         Task<IPagedList<ProductReservation>> GetProductReservationsByProductId(string productId, bool? showVacant, DateTime? minDate,
             DateTime? maxDate, int pageIndex = 0, int pageSize = int.MaxValue, string resourceSystemName = null);
 
+        Task<IEnumerable<ProductReservation>> GetProductReservationsByOrderId(string orderId);
+
         /// <summary>
         /// Gets product reservation for specified Id
         /// </summary>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{F2418F56-9620-4BA3-9078-D9732EC8DD48}"
 EndProject
@@ -66,6 +66,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.ExternalAuth.Google", "Plugins\Grand.Plugin.ExternalAuth.Google\Grand.Plugin.ExternalAuth.Google.csproj", "{B531A73A-A00D-49DC-8265-D3CAC8160C49}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.BrainTree", "Plugins\Grand.Plugin.Payments.BrainTree\Grand.Plugin.Payments.BrainTree.csproj", "{EC08558B-8993-49DC-8DB7-F96369740732}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.ExternalSystem.California", "Plugins\Grand.Plugin.ExternalSystem.California\Grand.Plugin.ExternalSystem.California.csproj", "{35D53648-0C7D-4EA8-9867-2B31FA877F85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -184,6 +186,10 @@ Global
 		{EC08558B-8993-49DC-8DB7-F96369740732}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC08558B-8993-49DC-8DB7-F96369740732}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC08558B-8993-49DC-8DB7-F96369740732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D53648-0C7D-4EA8-9867-2B31FA877F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D53648-0C7D-4EA8-9867-2B31FA877F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D53648-0C7D-4EA8-9867-2B31FA877F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D53648-0C7D-4EA8-9867-2B31FA877F85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -216,6 +222,7 @@ Global
 		{6DB6C66B-EC0F-43C0-8CC5-24804C872F6A} = {02A095EA-356B-4419-86B4-E7893017CBF2}
 		{B531A73A-A00D-49DC-8265-D3CAC8160C49} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{EC08558B-8993-49DC-8DB7-F96369740732} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{35D53648-0C7D-4EA8-9867-2B31FA877F85} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65BA1180-F5CC-42E1-B689-71E14D588393}

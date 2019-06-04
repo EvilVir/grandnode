@@ -49,7 +49,9 @@
                             id: "Id",
                             fields: {
                                 Name: { editable: true, type: "string" },
-                                SystemName: { editable: true, type: "string" }
+                                SystemName: { editable: true, type: "string" },
+                                Latitude: { editable: true, type: "string" },
+                                Longitude: { editable: true, type: "string"},
                             }
                         }
                     },
@@ -87,6 +89,16 @@
                     field: "SystemName",
                     title: "@T("Admin.Catalog.Products.Resources.Fields.SystemName")",
                     template: '#=SystemName#',
+                }, {
+                    field: "Latitude",
+                    format: "{0:n14}",
+                    title: "@T("Admin.Catalog.Products.Resources.Fields.Latitude")",
+                    template: '#=Latitude#',
+                }, {
+                    field: "Longitude",
+                    format: "{0:n14}",
+                    title: "@T("Admin.Catalog.Products.Resources.Fields.Longitude")",
+                    template: '#=Longitude#',
                 }, {
                     command: [{
                         name: "edit",

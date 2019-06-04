@@ -2429,7 +2429,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Id = x.Id,
                     ProductId = productId,
                     Name = x.Name,
-                    SystemName = x.SystemName
+                    SystemName = x.SystemName,
+                    Latitude = x.Latitude,
+                    Longitude = x.Longitude,
                 });
             }
 

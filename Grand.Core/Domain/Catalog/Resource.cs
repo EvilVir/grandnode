@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Grand.Core.Domain.Localization;
+
 namespace Grand.Core.Domain.Catalog
 {
     /// <summary>
@@ -5,6 +8,10 @@ namespace Grand.Core.Domain.Catalog
     /// </summary>
     public partial class Resource : SubBaseEntity
     {
+        public Resource()
+        {
+        }
+
         /// <summary>
         /// Human friendly name
         /// </summary>        
@@ -14,6 +21,16 @@ namespace Grand.Core.Domain.Catalog
         /// System codename
         /// </summary>
         public string SystemName { get; set; }
+
+        /// <summary>
+        /// Latitude of place where resource is located
+        /// </summary>
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude of place where resource is located
+        /// </summary>
+        public double Longitude { get; set; }
     }
 
 }

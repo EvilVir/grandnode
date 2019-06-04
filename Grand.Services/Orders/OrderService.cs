@@ -192,6 +192,7 @@ namespace Grand.Services.Orders
             string productId = "", string affiliateId = "", string warehouseId = "",
             string billingCountryId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            DateTime? createdOrUpdatedFromUtc = null, DateTime? createdOrUpdatedToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -243,6 +244,10 @@ namespace Grand.Services.Orders
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+            if (createdOrUpdatedFromUtc.HasValue)
+                query = query.Where(o => createdOrUpdatedFromUtc.Value <= o.UpdatedOnUtc);
+            if (createdOrUpdatedToUtc.HasValue)
+                query = query.Where(o => createdOrUpdatedToUtc.Value >= o.UpdatedOnUtc);
             if (orderStatusId.HasValue)
                 query = query.Where(o => orderStatusId.Value == o.OrderStatusId);
             if (paymentStatusId.HasValue)
@@ -326,6 +331,8 @@ namespace Grand.Services.Orders
         {
             if (order == null)
                 throw new ArgumentNullException("order");
+
+            order.UpdatedOnUtc = DateTime.UtcNow;
 
             await _orderRepository.UpdateAsync(order);
 

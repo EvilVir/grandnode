@@ -3625,7 +3625,7 @@
     <Value>Reservation start delta</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationEndDelta.Hint">
-    <Value>Time that will be added to the last moment of the reservation. (Eg. -11h for full day reservations, so clients will be required to leave at 13:00 at last day)</Value>
+    <Value>Time that will be added to the last moment of the reservation. (Eg. +13h for full day reservations, so clients will be required to leave at 13:00 at last day)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds">
     <Value>Required product IDs</Value>
@@ -4284,11 +4284,26 @@
   <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Name.Required">
     <Value>Name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Name.Hint">
+    <Value>This name will be added as sufix to localized name of the product (eg. "Room" + " " + this.Name)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.SystemName">
     <Value>System Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.SystemName.Required">
     <Value>System Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Latitude.Hint">
+    <Value>Latitude of point on map where this resource is located</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Longitude.Hint">
+    <Value>Longitude of point on map where this resource is located</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Resources.SaveBeforeEdit">
     <Value>You need to save the product before you can add resources for this product page.</Value>

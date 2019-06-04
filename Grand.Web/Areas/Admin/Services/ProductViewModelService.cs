@@ -1442,7 +1442,9 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 product.Resources.Add(new Resource() {
                     Name = model.Name,
-                    SystemName = model.SystemName
+                    SystemName = model.SystemName,
+                    Latitude = model.Latitude,
+                    Longitude = model.Longitude
                 });
             }
 
@@ -1458,6 +1460,8 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 existingResource.Name = model.Name;
                 existingResource.SystemName = model.SystemName;
+                existingResource.Latitude = model.Latitude;
+                existingResource.Longitude = model.Longitude;
             }
 
             await _productService.UpdateProduct(product);

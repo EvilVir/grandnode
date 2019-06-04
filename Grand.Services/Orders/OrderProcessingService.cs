@@ -27,6 +27,7 @@ using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Microsoft.Extensions.DependencyInjection;
+using shortid;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -1200,7 +1201,9 @@ namespace Grand.Services.Orders
                         UrlReferrer = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastUrlReferrer),
                         ShippingOptionAttributeDescription = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
                         ShippingOptionAttributeXml = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
-                        CreatedOnUtc = DateTime.UtcNow
+                        CreatedOnUtc = DateTime.UtcNow,
+                        UpdatedOnUtc = DateTime.UtcNow,
+                        ShortId = ShortId.Generate(true, false, 7)
                     };
 
                     if (!processPaymentRequest.IsRecurringPayment)

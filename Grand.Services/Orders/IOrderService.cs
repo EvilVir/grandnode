@@ -83,6 +83,7 @@ namespace Grand.Services.Orders
             string productId = "", string affiliateId = "", string warehouseId = "",
             string billingCountryId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            DateTime? createdOrUpdatedFromUtc = null, DateTime? createdOrUpdatedToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue);

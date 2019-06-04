@@ -108,6 +108,13 @@ namespace Grand.Services.Catalog
             return await PagedList<ProductReservation>.Create(query, pageIndex, pageSize);
         }
 
+        public virtual async Task<IEnumerable<ProductReservation>> GetProductReservationsByOrderId(string orderId)
+        {
+            return await _productReservationRepository.Table.Where(x => x.OrderId == orderId)
+                                                                 .OrderBy(x => x.Date)
+                                                                 .ToListAsync();
+        }
+
         /// <summary>
         /// Adds product reservation
         /// </summary>
