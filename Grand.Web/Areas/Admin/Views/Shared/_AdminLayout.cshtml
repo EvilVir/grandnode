@@ -51,6 +51,8 @@
     Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
 
+    Html.AppendCssFileParts("~/content/jsgantt.css", excludeFromBundle: true);
+    Html.AppendScriptParts("~/scripts/jsgantt.js", excludeFromBundle: true);
 
     //js
     //available list of culture https://github.com/telerik/kendo-ui-core/tree/master/src/cultures

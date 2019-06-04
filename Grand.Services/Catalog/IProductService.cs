@@ -46,6 +46,8 @@ namespace Grand.Services.Catalog
         /// <returns>Products</returns>
         Task<IList<Product>> GetPersonalizedProducts(string customerId);
 
+        Task<IList<Product>> GetProductsOfType(ProductType type);
+
         /// <summary>
         /// Gets product
         /// </summary>

@@ -376,6 +376,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string BaseDimensionIn { get; set; }
         public string BaseWeightIn { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ReservationStartDelta")]
+        public TimeSpan ReservationStartDelta { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ReservationEndDelta")]
+        public TimeSpan ReservationEndDelta { get; set; }
+
         public IList<ProductLocalizedModel> Locales { get; set; }
 
 

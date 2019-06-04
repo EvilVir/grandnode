@@ -336,6 +336,12 @@ namespace Grand.Services.Catalog
             return await PagedList<Product>.Create(query, pageIndex, pageSize);
         }
 
+        public virtual async Task<IList<Product>> GetProductsOfType(ProductType type)
+        {
+            var filter = Builders<Product>.Filter.Where(x => x.ProductTypeId == (int)type && x.Published);
+            return await (await _productRepository.Collection.FindAsync(filter)).ToListAsync();
+        }
+
 
         /// <summary>
         /// Inserts a product
@@ -478,6 +484,8 @@ namespace Grand.Services.Catalog
                 .Set(x => x.Weight, product.Weight)
                 .Set(x => x.Width, product.Width)
                 .Set(x => x.Resources, product.Resources)
+                .Set(x => x.ReservationEndDelta, product.ReservationEndDelta)
+                .Set(x => x.ReservationStartDelta, product.ReservationStartDelta)
                 .CurrentDate("UpdatedOnUtc");
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);

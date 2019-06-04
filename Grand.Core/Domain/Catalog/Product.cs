@@ -553,6 +553,16 @@ namespace Grand.Core.Domain.Catalog
         public string Flag { get; set; }
 
         /// <summary>
+        /// Gets or sets reservation start time delta
+        /// </summary>
+        public TimeSpan ReservationStartDelta { get; set; }
+
+        /// <summary>
+        /// Gets or sets reservation end time delta
+        /// </summary>
+        public TimeSpan ReservationEndDelta { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }

@@ -65,6 +65,7 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
         if (selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
             $('#group-required-other-products').show();
+            $('#group-reservation-deltas').hide();
             $('#group-giftcard').show();
             $('#group-downloads').show();
             $('#group-recurring').show();
@@ -82,6 +83,7 @@
             $('#tab-bids').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
             $('#group-required-other-products').hide();
+            $('#group-reservation-deltas').hide();
             $('#group-giftcard').hide();
             $('#group-downloads').hide();
             $('#group-recurring').hide();
@@ -99,6 +101,7 @@
             $('#tab-bids').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.Reservation).ToString())){
             $('#group-required-other-products').show();
+            $('#group-reservation-deltas').show();
             $('#group-giftcard').show();
             $('#group-downloads').show();
             $('#group-shipping').show();
@@ -123,6 +126,7 @@
             $('#tab-inventory-product').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.BundledProduct).ToString())){
             $('#group-required-other-products').hide();
+            $('#group-reservation-deltas').hide();
             $('#group-giftcard').hide();
             $('#group-downloads').show();
             $('#group-recurring').hide();
@@ -141,6 +145,7 @@
             $("#@Html.FieldIdFor(model => model.IsRecurring)").prop("checked", false);
         } else if (selectedProductTypeId == @(((int) ProductType.Auction).ToString())){
             $('#tab-bids').show();
+            $('#group-reservation-deltas').hide();
             $('#tab-calendar').hide();
             $('#tab-resources').hide();
             $('#tab-bundle-products').hide();
@@ -482,12 +487,13 @@
                 <span asp-validation-for="ProductTypeId"></span>
             </div>
         </div>
+
         <div class="form-group">
             <admin-label asp-for="VisibleIndividually" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="VisibleIndividually" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="VisibleIndividually"></span>
             </div>
@@ -512,66 +518,87 @@
         </div>
     </div>
 </div>
+
+<div class="form-horizontal" id="group-reservation-deltas">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="ReservationStartDelta" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ReservationStartDelta" />
+                <span asp-validation-for="ReservationStartDelta"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="ReservationEndDelta" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ReservationEndDelta" />
+                <span asp-validation-for="ReservationEndDelta"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
-    @<div class="form-horizontal portlet bg-inverse form-fit">
-        <div class="form-body">
-            <div class="form-group">
-                <admin-label asp-for="@Model.Locales[item].Name" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="@Model.Locales[item].Name" />
-                    <span asp-validation-for="@Model.Locales[item].Name"></span>
+        @<div class="form-horizontal portlet bg-inverse form-fit">
+            <div class="form-body">
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Name" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="@Model.Locales[item].Name" />
+                        <span asp-validation-for="@Model.Locales[item].Name"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <admin-label asp-for="@Model.Locales[item].ShortDescription" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-textarea asp-for="@Model.Locales[item].ShortDescription"></admin-textarea>
-                    <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].ShortDescription" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-textarea asp-for="@Model.Locales[item].ShortDescription"></admin-textarea>
+                        <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <admin-label asp-for="@Model.Locales[item].FullDescription" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="@Model.Locales[item].FullDescription" asp-template="RichEditor" />
-                    <span asp-validation-for="@Model.Locales[item].FullDescription"></span>
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].FullDescription" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="@Model.Locales[item].FullDescription" asp-template="RichEditor" />
+                        <span asp-validation-for="@Model.Locales[item].FullDescription"></span>
+                    </div>
                 </div>
-            </div>
-            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
-        </div>
-    </div>
-    ,
-    @<div class="form-horizontal portlet bg-inverse form-fit">
-        <div class="form-body">
-            <div class="form-group">
-                <admin-label asp-for="Name" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Name" />
-                    <span asp-validation-for="Name"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <admin-label asp-for="ShortDescription" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-textarea asp-for="ShortDescription"></admin-textarea>
-                    <span asp-validation-for="ShortDescription"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <admin-label asp-for="FullDescription" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="FullDescription" asp-template="RichEditor" />
-                    <span asp-validation-for="FullDescription"></span>
-                </div>
+                <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
             </div>
         </div>
-    </div>
-            ))
+,
+            @<div class="form-horizontal portlet bg-inverse form-fit">
+                <div class="form-body">
+                    <div class="form-group">
+                        <admin-label asp-for="Name" />
+                        <div class="col-md-9 col-sm-9">
+                            <admin-input asp-for="Name" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <admin-label asp-for="ShortDescription" />
+                        <div class="col-md-9 col-sm-9">
+                            <admin-textarea asp-for="ShortDescription"></admin-textarea>
+                            <span asp-validation-for="ShortDescription"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <admin-label asp-for="FullDescription" />
+                        <div class="col-md-9 col-sm-9">
+                            <admin-input asp-for="FullDescription" asp-template="RichEditor" />
+                            <span asp-validation-for="FullDescription"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  ))
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <admin-label asp-for="Flag"/>
+            <admin-label asp-for="Flag" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Flag"/>
+                <admin-input asp-for="Flag" />
                 <span asp-validation-for="Flag"></span>
             </div>
         </div>
@@ -594,7 +621,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowOnHomePage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowOnHomePage"></span>
             </div>
@@ -611,7 +638,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowCustomerReviews" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowCustomerReviews"></span>
             </div>
@@ -667,7 +694,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="MarkAsNew" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="MarkAsNew"></span>
             </div>
@@ -691,7 +718,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="Published" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="Published"></span>
             </div>

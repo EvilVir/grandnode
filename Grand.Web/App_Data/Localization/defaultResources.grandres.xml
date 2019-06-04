@@ -3615,6 +3615,18 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringTotalCycles.Hint">
     <Value>Enter total cycles.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationStartDelta">
+    <Value>Reservation start delta</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationStartDelta.Hint">
+    <Value>Time that will be added to the first moment of the reservation. (Eg. +15h for full day reservations, so clients can enter the room at 15:00 at first day)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationEndDelta">
+    <Value>Reservation start delta</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationEndDelta.Hint">
+    <Value>Time that will be added to the last moment of the reservation. (Eg. -11h for full day reservations, so clients will be required to leave at 13:00 at last day)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds">
     <Value>Required product IDs</Value>
   </LocaleResource>

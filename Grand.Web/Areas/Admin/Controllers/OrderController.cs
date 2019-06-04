@@ -39,7 +39,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
-        private readonly IExportManager _exportManager;        
+        private readonly IExportManager _exportManager;
         #endregion
 
         #region Ctor
@@ -1299,6 +1299,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
+        #endregion
+
+        #region Reservations
+
+        //public async Task<IActionResult> GetReservations(DateTime dateFrom, DateTime dateTo, [FromServices] IProductService productService)
+        //{
+        //}
+
         #endregion
     }
 }

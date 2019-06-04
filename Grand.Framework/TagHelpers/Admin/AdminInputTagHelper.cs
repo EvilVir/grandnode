@@ -125,7 +125,7 @@ namespace Grand.Framework.TagHelpers.Admin
             //add form-control class
             bool.TryParse(RenderFormControlClass, out bool renderFormControlClass);
             object htmlAttributes = null;
-            if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
+            if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || For.Metadata.ModelType.Name.Equals("TimeSpan") || renderFormControlClass)
                 htmlAttributes = new { @class = "form-control k-input" };
 
             var viewEngine = GetPrivateFieldValue(_htmlHelper, "_viewEngine") as IViewEngine;
