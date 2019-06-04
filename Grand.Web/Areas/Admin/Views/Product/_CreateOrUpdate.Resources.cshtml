@@ -51,7 +51,8 @@
                                 Name: { editable: true, type: "string" },
                                 SystemName: { editable: true, type: "string" },
                                 Latitude: { editable: true, type: "string" },
-                                Longitude: { editable: true, type: "string"},
+                                Longitude: { editable: true, type: "string" },
+                                Color: { editable: true, type: "string" }
                             }
                         }
                     },
@@ -89,6 +90,11 @@
                     field: "SystemName",
                     title: "@T("Admin.Catalog.Products.Resources.Fields.SystemName")",
                     template: '#=SystemName#',
+                }, {
+                    field: "Color",
+                    title: "@T("Admin.Catalog.Products.Resources.Fields.Color")",
+                    format: "#{0}",
+                    template: '#=Color#',
                 }, {
                     field: "Latitude",
                     format: "{0:n14}",

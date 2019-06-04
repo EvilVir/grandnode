@@ -1444,7 +1444,8 @@ namespace Grand.Web.Areas.Admin.Services
                     Name = model.Name,
                     SystemName = model.SystemName,
                     Latitude = model.Latitude,
-                    Longitude = model.Longitude
+                    Longitude = model.Longitude,
+                    Color = model.Color
                 });
             }
 
@@ -1462,6 +1463,7 @@ namespace Grand.Web.Areas.Admin.Services
                 existingResource.SystemName = model.SystemName;
                 existingResource.Latitude = model.Latitude;
                 existingResource.Longitude = model.Longitude;
+                existingResource.Color = model.Color;
             }
 
             await _productService.UpdateProduct(product);

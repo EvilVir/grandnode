@@ -4305,6 +4305,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Longitude.Hint">
     <Value>Longitude of point on map where this resource is located</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Color">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Resources.Fields.Color.Hint">
+    <Value>Color to be used on calendars and other visualizations</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Resources.SaveBeforeEdit">
     <Value>You need to save the product before you can add resources for this product page.</Value>
   </LocaleResource>
@@ -11880,7 +11886,7 @@
   <LocaleResource Name="Admin.Dashboard.ReportOverviewHelper">
     <Value>report overview...</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Dashboard.ReservationsGantt">
+  <LocaleResource Name="Admin.Dashboard.ReservationsCalendar">
     <Value>Reservations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.Statistics">

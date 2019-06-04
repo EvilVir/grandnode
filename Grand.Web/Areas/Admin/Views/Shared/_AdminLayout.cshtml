@@ -51,8 +51,15 @@
     Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
 
-    Html.AppendCssFileParts("~/content/jsgantt.css", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/jsgantt.js", excludeFromBundle: true);
+    //fullcalendar
+    Html.AppendCssFileParts("~/content/fullcalendar/core/main.css", excludeFromBundle: true);
+    Html.AppendCssFileParts("~/content/fullcalendar/daygrid/main.css", excludeFromBundle: true);
+    //Html.AppendCssFileParts("~/content/fullcalendar/timegrid/main.css", excludeFromBundle: true);
+
+    Html.AppendScriptParts(string.Format("~/content/fullcalendar/core/locales/{0}.js", this.WorkingLanguage().ToLowerInvariant()), excludeFromBundle: true);
+    //Html.AppendScriptParts("~/content/fullcalendar/timegrid/main.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/content/fullcalendar/daygrid/main.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/content/fullcalendar/core/main.js", excludeFromBundle: true);
 
     //js
     //available list of culture https://github.com/telerik/kendo-ui-core/tree/master/src/cultures

@@ -108,6 +108,37 @@ namespace Grand.Services.Catalog
             return await PagedList<ProductReservation>.Create(query, pageIndex, pageSize);
         }
 
+
+        public async Task<IPagedList<ProductReservation>> GetReservations(bool? showVacant, DateTime? minDate, DateTime? maxDate, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _productReservationRepository.Table;
+
+            if (showVacant.HasValue)
+            {
+                if (showVacant.Value)
+                {
+                    query = query.Where(x => (x.OrderId == "" || x.OrderId == null));
+                }
+                else
+                {
+                    query = query.Where(x => (x.OrderId != "" && x.OrderId != null));
+                }
+            }
+
+            if (minDate.HasValue)
+            {
+                query = query.Where(x => x.Date >= minDate);
+            }
+
+            if (maxDate.HasValue)
+            {
+                query = query.Where(x => x.Date <= maxDate);
+            }
+
+            query = query.OrderBy(x => x.Date);
+            return await PagedList<ProductReservation>.Create(query, pageIndex, pageSize);
+        }
+
         public virtual async Task<IEnumerable<ProductReservation>> GetProductReservationsByOrderId(string orderId)
         {
             return await _productReservationRepository.Table.Where(x => x.OrderId == orderId)

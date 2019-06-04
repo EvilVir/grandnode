@@ -243,11 +243,12 @@
         <div class="col-md-12">
             <div class="x_panel light bordered">
                 <div class="x_title">
-                    <h2 class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ReservationsGantt")</h2>
+                    <h2 class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ReservationsCalendar")</h2>
+                    <button class="btn btn-default" onclick="javascript:OpenWindow('@(Url.Action("ReservationsCalendarPopup", "Order"))', 920, 792, true); return false;"><i class="fa fa-external-link"></i></button>
                     <div class="clear"></div>
                 </div>
                 <div class="x_content">
-                    @await Component.InvokeAsync("ReservationsGantt")
+                    @await Component.InvokeAsync("ReservationsCalendar")
                 </div>
             </div>
         </div>

@@ -2432,6 +2432,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     SystemName = x.SystemName,
                     Latitude = x.Latitude,
                     Longitude = x.Longitude,
+                    Color = x.Color
                 });
             }
 

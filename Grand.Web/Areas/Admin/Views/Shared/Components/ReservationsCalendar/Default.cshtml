@@ -1,0 +1,36 @@
+﻿<div id="reservations-calendar"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var calendarEl = document.getElementById('reservations-calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: '@(this.WorkingLanguage().ToLowerInvariant())',
+            firstDay: 1,
+            defaultView: 'dayGridMonth',
+            plugins: ['dayGrid'],
+            eventSources: [
+                {
+                    id: 'resourcesReservations',
+                    url: '@Html.Raw(Url.Action("GetReservations", "Order"))',
+                    method: 'GET',
+                    startParam: 'dateFrom',
+                    endParam: 'dateTo',
+                }
+            ],
+
+            eventRender: function (info) {
+
+                //var tooltip = new Tooltip(info.el, {
+                //    title: info.event.extendedProps.title,
+                //    placement: 'top',
+                //    trigger: 'hover',
+                //    container: 'body'
+                //});
+            }
+        });
+
+        calendar.render();
+
+    });
+</script>

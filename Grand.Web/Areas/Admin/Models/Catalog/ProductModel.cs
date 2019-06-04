@@ -622,6 +622,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.Longitude")]
             public double Longitude { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Resources.Fields.Color")]
+            public string Color { get; set; }
         }
 
         public partial class SimilarProductModel : BaseGrandEntityModel

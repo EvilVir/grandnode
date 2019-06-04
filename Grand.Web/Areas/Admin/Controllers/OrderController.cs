@@ -8,15 +8,15 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
-using Grand.Services.Directory;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Security;
+using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Orders;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Grand.Services.Shipping;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -40,6 +39,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
+        private readonly IProductService _productService;
+        private readonly IProductReservationService _productReservationService;
         #endregion
 
         #region Ctor
@@ -50,9 +51,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            ICurrencyService currencyService,
             IPdfService pdfService,
-            IExportManager exportManager)
+            IExportManager exportManager,
+            IProductService productService,
+            IProductReservationService productReservationService)
         {
             this._orderViewModelService = orderViewModelService;
             this._orderService = orderService;
@@ -61,6 +63,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._workContext = workContext;
             this._pdfService = pdfService;
             this._exportManager = exportManager;
+            this._productService = productService;
+            this._productReservationService = productReservationService;
         }
         
         #endregion
@@ -1303,9 +1307,62 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Reservations
 
-        //public async Task<IActionResult> GetReservations(DateTime dateFrom, DateTime dateTo, [FromServices] IProductService productService)
-        //{
-        //}
+        public IActionResult ReservationsCalendarPopup()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> GetReservations(DateTime dateFrom, DateTime dateTo)
+        {
+            var reservations = (await _productReservationService.GetReservations(false, dateFrom, dateTo))
+                                .GroupBy(x => x.ProductId);
+
+            var output = new List<ReservationCalendarModel>();
+
+            foreach (var productGroup in reservations)
+            {
+                var product = await _productService.GetProductById(productGroup.Key);
+
+                if (product != null)
+                {
+                    var productName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
+                    var resources = productGroup.GroupBy(x => x.Resource);
+
+                    foreach (var resourceGroup in resources)
+                    {
+                        var resource = product.Resources.Where(x => x.SystemName == resourceGroup.Key).FirstOrDefault();
+
+                        if (resource != null)
+                        {
+                            var orders = resourceGroup.GroupBy(x => x.OrderId);
+
+                            foreach (var orderGroup in orders)
+                            {
+                                var order = await _orderService.GetOrderById(orderGroup.Key);
+
+                                if (order != null && order.OrderStatus != OrderStatus.Cancelled)
+                                {
+                                    output.Add(new ReservationCalendarModel() {
+                                        OrderId = order.Id,
+                                        OrderLink = Url.Action("Edit", "Order", new { Id = order.Id }),
+                                        Start = orderGroup.Min(x => x.Date).Add(product.ReservationStartDelta),
+                                        End = orderGroup.Max(x => x.Date).Add(product.ReservationEndDelta).AddDays(!product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day ? 1 : 0),
+                                        ResourceId = resource.SystemName,
+                                        Color = resource.Color,
+                                        ResourceDescription = $"{productName} {resource.Name}",
+                                        CustomerId = order.CustomerId,
+                                        CustomerDescription = ($"{order.FirstName} {order.LastName}".Trim() + (!string.IsNullOrEmpty(order.CompanyName) ? $" ({order.CompanyName})" : "")).Trim(),
+                                        CustomerLink = Url.Action("Edit", "Customer", new { Id = order.CustomerId })
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Json(output);
+        }
 
         #endregion
     }

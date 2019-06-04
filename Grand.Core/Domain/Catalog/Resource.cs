@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Grand.Core.Domain.Localization;
-
 namespace Grand.Core.Domain.Catalog
 {
     /// <summary>
@@ -31,6 +28,11 @@ namespace Grand.Core.Domain.Catalog
         /// Longitude of place where resource is located
         /// </summary>
         public double Longitude { get; set; }
+
+        /// <summary>
+        /// Hexadecimal RGB color of this resource. Used for presentation in statistics, calendars etc.
+        /// </summary>
+        public string Color { get; set; }
     }
 
 }

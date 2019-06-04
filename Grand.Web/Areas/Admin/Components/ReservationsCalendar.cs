@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class ReservationsGantt : BaseViewComponent
+    public class ReservationsCalendar : BaseViewComponent
     {
         private readonly IPermissionService _permissionService;
 
-        public ReservationsGantt(IPermissionService permissionService)
+        public ReservationsCalendar(IPermissionService permissionService)
         {
             this._permissionService = permissionService;
         }
