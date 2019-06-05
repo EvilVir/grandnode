@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+@model DotPaySettingsModel
+@using Grand.Plugin.Payments.DotPay.Models;
+@using Grand.Framework;
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="PaymentDotPay" asp-action="Configure" method="post">
+    <antiforgery-token />
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="UseSandbox" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                        <admin-input asp-for="UseSandbox" />
+                        <div class="control__indicator"></div>
+                    </label>
+                    <span asp-validation-for="UseSandbox"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShopId_OverrideForStore, model => model.ShopId, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="ShopId" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="ShopId" />
+                    <span asp-validation-for="ShopId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.Pin_OverrideForStore, model => model.Pin, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="Pin" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Pin" />
+                    <span asp-validation-for="Pin"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

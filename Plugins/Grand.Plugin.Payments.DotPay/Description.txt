@@ -1,0 +1,8 @@
+﻿Group: Payment methods
+FriendlyName: DotPay
+SystemName: Payments.DotPay
+Version: 1.0
+SupportedVersions: 4.50
+Author: Strange Fog Studios
+DisplayOrder: 1
+FileName: Grand.Plugin.Payments.DotPay.dll

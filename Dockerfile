@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
 
 WORKDIR /app
 
@@ -23,6 +23,7 @@ COPY Plugins/Grand.Plugin.Tax.CountryStateZip/Grand.Plugin.Tax.CountryStateZip.c
 COPY Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj
 COPY Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj
 COPY Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj
+COPY Plugins/Grand.Plugin.ExternalSystem.California/Grand.Plugin.ExternalSystem.California.csproj Plugins/Grand.Plugin.ExternalSystem.California/Grand.Plugin.ExternalSystem.California.csproj
 
 # Copy everything else and build
 COPY . ./
@@ -42,9 +43,10 @@ RUN dotnet build Plugins/Grand.Plugin.Tax.CountryStateZip
 RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
 RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
 RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
+RUN dotnet build Plugins/Grand.Plugin.ExternalSystem.California
 
 # Build runtime image
-FROM microsoft/dotnet:2.2-aspnetcore-runtime 
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 RUN apt-get update && \
   apt-get -y install libgdiplus
 RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so

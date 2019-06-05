@@ -266,7 +266,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             application.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                ForwardedHeaders = ForwardedHeaders.All
             });
         }
 

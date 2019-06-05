@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "";
+}
+<table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <label class="custom-control custom-checkbox">
+                <input class="custom-control-input" id="dotpay-regulations-check" type="checkbox" name="dotpay-regulations-check" value="checked" />
+                <span class="custom-control-label"></span>
+                <span class="sr-only">@Html.Raw(T("Plugins.Payments.DotPay.Redirection.Regulations"))</span>
+                <span class="custom-control-description">@Html.Raw(T("Plugins.Payments.DotPay.Redirection.Regulations"))</span>
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label class="custom-control custom-checkbox">
+                <input class="custom-control-input" id="dotpay-personal-data-check" type="checkbox" name="dotpay-personal-data-check" value="checked" />
+                <span class="custom-control-label"></span>
+                <span class="sr-only">@Html.Raw(T("Plugins.Payments.DotPay.Redirection.PersonalData"))</span>
+                <span class="custom-control-description">@Html.Raw(T("Plugins.Payments.DotPay.Redirection.PersonalData"))</span>
+            </label>
+        </td>
+    </tr>
+</table>

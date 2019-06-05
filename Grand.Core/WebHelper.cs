@@ -213,7 +213,7 @@ namespace Grand.Core
                 return string.Empty;
 
             //try to get host from the request HOST header
-            var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
+            var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[_hostingConfig.UseForwardedHeaders ? (!string.IsNullOrEmpty(_hostingConfig.ForwardedHttpHeader) ? _hostingConfig.ForwardedHttpHeader : "X-Forwarded-Host") : HeaderNames.Host];
             if (StringValues.IsNullOrEmpty(hostHeader))
                 return string.Empty;
 

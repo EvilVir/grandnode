@@ -1,0 +1,17 @@
+﻿@model bool
+@{
+    Layout = "_ColumnsOne";
+}
+<div class="page dotpay-customer-return @(Model ? "dotpay-ok" : "dotpay-failure")">
+    <h1 class="h2 generalTitle">@T("Plugins.Payments.DotPay.CustomerReturn")</h1>
+    <div class="row">
+        @if (Model)
+        {
+            <p>@Html.Raw(T("Plugins.Payments.DotPay.CustomerReturn.OK"))</p>
+        }
+        else
+        {
+            <p>@Html.Raw(T("Plugins.Payments.DotPay.CustomerReturn.Failure"))</p>
+        }
+    </div>
+</div>
