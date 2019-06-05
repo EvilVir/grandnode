@@ -2322,6 +2322,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     yield return new ProductReservation 
                     {
                         OrderId = "",
+                        OrderItemId = "",
                         Date = iterator,
                         ProductId = model.ProductId,
                         Resource = model.Resource,

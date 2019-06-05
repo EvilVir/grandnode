@@ -62,6 +62,9 @@
                         <th>
                             @T("Admin.Orders.Products.ProductName")
                         </th>
+                        <th>
+                            @T("Admin.Orders.Products.OrderItemShortId")
+                        </th>
                         @if (Model.HasDownloadableProducts)
                         {
                             <th>
@@ -160,6 +163,7 @@
                                     }
                                 </div>
                             </td>
+                            <td>@item.ShortId</td>
                             @if (Model.HasDownloadableProducts)
                             {
                                 <td>

@@ -41,6 +41,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IProductService _productService;
         private readonly IProductReservationService _productReservationService;
+        private readonly IProductAttributeParser _productAttributeParser;
         #endregion
 
         #region Ctor
@@ -54,7 +55,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IPdfService pdfService,
             IExportManager exportManager,
             IProductService productService,
-            IProductReservationService productReservationService)
+            IProductReservationService productReservationService,
+            IProductAttributeParser productAttributeParser)
         {
             this._orderViewModelService = orderViewModelService;
             this._orderService = orderService;
@@ -65,6 +67,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._exportManager = exportManager;
             this._productService = productService;
             this._productReservationService = productReservationService;
+            this._productAttributeParser = productAttributeParser;
         }
         
         #endregion
@@ -1314,50 +1317,42 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetReservations(DateTime dateFrom, DateTime dateTo)
         {
-            var reservations = (await _productReservationService.GetReservations(false, dateFrom, dateTo))
-                                .GroupBy(x => x.ProductId);
-
             var output = new List<ReservationCalendarModel>();
 
-            foreach (var productGroup in reservations)
+            var reservableProducts = (await _productService.GetProductsOfType(ProductType.Reservation)).ToDictionary(k => k.Id, v => v);
+            var orders = await _orderService.SearchOrders(anyReservationItemFromUtc: dateFrom, anyReservationItemToUtc: dateTo, os: OrderStatus.Complete);
+
+            foreach (var order in orders)
             {
-                var product = await _productService.GetProductById(productGroup.Key);
+                var orderSlots = (await _productReservationService.GetProductReservationsByOrderId(order.Id)).GroupBy(x => x.OrderItemId).ToDictionary(k => k.Key, v => v.ToList());
 
-                if (product != null)
+                foreach (var orderItem in order.OrderItems.Where(x => reservableProducts.ContainsKey(x.ProductId)))
                 {
+                    var orderItemSlots = orderSlots[orderItem.Id];
+                    var resourcesSlots = orderItemSlots.GroupBy(x => x.Resource).ToDictionary(k => k.Key, v => v.ToList());
+                    var product = reservableProducts[orderItem.ProductId];
                     var productName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
-                    var resources = productGroup.GroupBy(x => x.Resource);
+                    var orderItemAttributes = _productAttributeParser.ParseProductAttributeValues(product, orderItem.AttributesXml).Select(x => x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id)).ToArray();
 
-                    foreach (var resourceGroup in resources)
+                    foreach (var resourceSlots in resourcesSlots)
                     {
-                        var resource = product.Resources.Where(x => x.SystemName == resourceGroup.Key).FirstOrDefault();
+                        var resource = product.Resources.Where(x => x.SystemName == resourceSlots.Key).FirstOrDefault();
 
-                        if (resource != null)
-                        {
-                            var orders = resourceGroup.GroupBy(x => x.OrderId);
-
-                            foreach (var orderGroup in orders)
-                            {
-                                var order = await _orderService.GetOrderById(orderGroup.Key);
-
-                                if (order != null && order.OrderStatus != OrderStatus.Cancelled)
-                                {
-                                    output.Add(new ReservationCalendarModel() {
-                                        OrderId = order.Id,
-                                        OrderLink = Url.Action("Edit", "Order", new { Id = order.Id }),
-                                        Start = orderGroup.Min(x => x.Date).Add(product.ReservationStartDelta),
-                                        End = orderGroup.Max(x => x.Date).Add(product.ReservationEndDelta).AddDays(!product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day ? 1 : 0),
-                                        ResourceId = resource.SystemName,
-                                        Color = resource.Color,
-                                        ResourceDescription = $"{productName} {resource.Name}",
-                                        CustomerId = order.CustomerId,
-                                        CustomerDescription = ($"{order.FirstName} {order.LastName}".Trim() + (!string.IsNullOrEmpty(order.CompanyName) ? $" ({order.CompanyName})" : "")).Trim(),
-                                        CustomerLink = Url.Action("Edit", "Customer", new { Id = order.CustomerId })
-                                    });
-                                }
-                            }
-                        }
+                        output.Add(new ReservationCalendarModel() {
+                            OrderItemId = orderItem.Id,
+                            OrderLink = Url.Action("Edit", "Order", new { Id = order.Id }),
+                            Start = resourceSlots.Value.Min(x => x.Date).Add(product.ReservationStartDelta),
+                            End = resourceSlots.Value.Max(x => x.Date).Add(product.ReservationEndDelta).AddDays(!product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day ? 1 : 0),
+                            ResourceId = resource.SystemName,
+                            Color = resource.Color,
+                            ResourceDescription = $"{productName} {resource.Name}",
+                            CustomerId = order.CustomerId,
+                            CustomerDescription = ($"{order.FirstName} {order.LastName}".Trim() + (!string.IsNullOrEmpty(order.CompanyName) ? $" ({order.CompanyName})" : "")).Trim(),
+                            CustomerLink = Url.Action("Edit", "Customer", new { Id = order.CustomerId }),
+                            AdditionalServices = orderItemAttributes
+                        });
                     }
+
                 }
             }
 

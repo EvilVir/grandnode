@@ -12832,6 +12832,9 @@
   <LocaleResource Name="Admin.Orders.Products.License.UploadFile">
     <Value>Upload license file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.OrderItemShortId">
+    <Value>Code</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Products.Picture">
     <Value>Picture</Value>
   </LocaleResource>
@@ -17362,6 +17365,9 @@
   <LocaleResource Name="Messages.Order.Product(s).Quantity">
     <Value>Quantity</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.Order.Product(s).ShortId">
+    <Value>Code</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.Product(s).SKU">
     <Value>SKU: {0}</Value>
   </LocaleResource>
@@ -17545,10 +17551,10 @@
   <LocaleResource Name="Order.OrderStatus">
     <Value>Order Status</Value>
   </LocaleResource>
-  <LocaleResource Name="Order.ShortId">
+  <LocaleResource Name="OrderItem.ShortId">
     <Value>Code</Value>
   </LocaleResource>
-  <LocaleResource Name="Order.ShortId.ApplicationCode">
+  <LocaleResource Name="OrderItem.ShortId.ApplicationCode">
     <Value>This code can be used to reference the order</Value>
   </LocaleResource>
   <LocaleResource Name="Order.OrderTotal">

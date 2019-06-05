@@ -246,6 +246,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
                 PurchasedGiftCardIds = new List<string>();
             }
             public string ProductId { get; set; }
+            public string ShortId { get; set; }
             public string ProductName { get; set; }
             public string VendorName { get; set; }
             public string Sku { get; set; }

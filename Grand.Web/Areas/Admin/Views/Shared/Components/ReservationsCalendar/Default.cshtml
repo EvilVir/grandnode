@@ -19,14 +19,59 @@
                 }
             ],
 
+            eventClick: function (info) {
+
+                var url = info.event.extendedProps.order_link;
+
+                try {
+                    if (!window.opener) {
+                        document.location.href = url;
+                    } else {
+                        window.opener.location.href = url;
+                    }
+                }
+                catch (e) {
+                    window.open(url);
+                }
+            },
+
             eventRender: function (info) {
 
-                //var tooltip = new Tooltip(info.el, {
-                //    title: info.event.extendedProps.title,
-                //    placement: 'top',
-                //    trigger: 'hover',
-                //    container: 'body'
-                //});
+                var data = info.event.extendedProps;
+                var element = $(info.el);
+                var warningIndicatorHtml = '';
+
+                element.css('cursor', 'pointer');
+
+                if (data.additional_services && data.additional_services.length > 0) {
+                    warningIndicatorHtml = '<div style="border-radius: 10px !important; width: 10px; height: 10px; margin-right: 5px; margin-left: 5px; display: inline-block; background-color: #fff500;"></div>'
+                }
+
+                var titleHtml = warningIndicatorHtml + '<b>' + data.customer_description + '</b> <em>' + data.resource_description + '</em>';
+                element.find('.fc-title').html(titleHtml);
+
+                var tooltipHtml = '<br>' + warningIndicatorHtml + '<b>' + data.customer_description + '</b><hr><em>' + data.resource_description + '</em>' + '<br>' + moment(info.event.start).format("DD-MM-YYYY HH:mm") + '<br>' + moment(info.event.end).format("DD-MM-YYYY HH:mm");
+
+                if (data.additional_services && data.additional_services.length > 0) {
+
+                    tooltipHtml += "<hr>";
+
+                    for (var i = 0; i < data.additional_services.length; i++) {
+                        tooltipHtml += '° ' + data.additional_services[i] + '<br>';
+                    }
+                }
+                else {
+                    tooltipHtml += "<br>";
+                }
+
+                tooltipHtml += "<br>";
+
+                element.tooltip({
+                    html: true,
+                    title: tooltipHtml,
+                    trigger: "hover",
+                    placement: "auto"
+                });
             }
         });
 

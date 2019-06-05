@@ -165,7 +165,6 @@ namespace Grand.Web.Services
 
             model.Id = order.Id;
             model.OrderNumber = order.OrderNumber;
-            model.ShortId = order.ShortId;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
@@ -394,6 +393,7 @@ namespace Grand.Web.Services
                 {
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
+                    ShortId = orderItem.ShortId,
                     Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     ProductId = product.Id,
                     ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),

@@ -251,7 +251,7 @@ namespace Grand.Services.Catalog
         {
             if (!string.IsNullOrEmpty(orderId))
             {
-                var update = new UpdateDefinitionBuilder<ProductReservation>().Set(x => x.OrderId, "");
+                var update = new UpdateDefinitionBuilder<ProductReservation>().Set(x => x.OrderId, "").Set(x => x.OrderItemId, "");
                 await _productReservationRepository.Collection.UpdateManyAsync(x => x.OrderId == orderId, update);
             }
         }

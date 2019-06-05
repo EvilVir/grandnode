@@ -65,6 +65,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
+        public string ShortId
+        {
+            get
+            {
+                return _orderItem.ShortId;
+            }
+        }
+
         public Guid OrderItemGuid0
         {
             get

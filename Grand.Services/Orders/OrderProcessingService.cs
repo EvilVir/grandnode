@@ -1202,8 +1202,7 @@ namespace Grand.Services.Orders
                         ShippingOptionAttributeDescription = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
                         ShippingOptionAttributeXml = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
                         CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow,
-                        ShortId = ShortId.Generate(true, false, 7)
+                        UpdatedOnUtc = DateTime.UtcNow
                     };
 
                     if (!processPaymentRequest.IsRecurringPayment)
@@ -1286,6 +1285,7 @@ namespace Grand.Services.Orders
                                 RentalStartDateUtc = sc.RentalStartDateUtc,
                                 RentalEndDateUtc = sc.RentalEndDateUtc,
                                 CreatedOnUtc = DateTime.UtcNow,
+                                ShortId = ShortId.Generate(true, false, 7).ToUpperInvariant()
                             };
 
                             string reservationInfo = "";
@@ -1429,6 +1429,7 @@ namespace Grand.Services.Orders
                                             foreach (var item in temp)
                                             {
                                                 item.OrderId = order.OrderGuid.ToString();
+                                                item.OrderItemId = orderItem.OrderItemGuid.ToString();
                                             }
 
                                             await _productReservationService.UpdateProductReservation(temp);
@@ -1487,6 +1488,7 @@ namespace Grand.Services.Orders
                         foreach (var resToUpdate in reservationsToUpdate)
                         {
                             resToUpdate.OrderId = order.Id;
+                            resToUpdate.OrderItemId = order.OrderItems.Where(x => x.OrderItemGuid.ToString() == resToUpdate.OrderItemId).Select(x => x.Id).First();
                             await _productReservationService.UpdateProductReservation(resToUpdate);
                         }
 

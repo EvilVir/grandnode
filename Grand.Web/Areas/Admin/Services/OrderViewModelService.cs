@@ -684,6 +684,7 @@ namespace Grand.Web.Areas.Admin.Services
                     {
                         Id = orderItem.Id,
                         ProductId = orderItem.ProductId,
+                        ShortId = orderItem.ShortId,
                         ProductName = product.Name,
                         Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                         Quantity = orderItem.Quantity,

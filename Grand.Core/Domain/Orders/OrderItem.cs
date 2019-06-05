@@ -15,6 +15,11 @@ namespace Grand.Core.Domain.Orders
         public Guid OrderItemGuid { get; set; }
 
         /// <summary>
+        /// Short identificator that can be used in client's e-mails etc.
+        /// </summary>
+        public string ShortId { get; set; }
+
+        /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
         public string ProductId { get; set; }

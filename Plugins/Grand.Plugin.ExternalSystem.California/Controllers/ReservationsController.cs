@@ -20,73 +20,64 @@ namespace Grand.Plugin.ExternalSystem.California.Controllers
         private readonly IProductReservationService _productReservationService;
         private readonly IOrderService _orderService;
         private readonly ILanguageService _languageService;
+        private readonly IProductAttributeParser _productAttributeParser;
 
-        public ReservationsController(IProductReservationService productReservationService, IProductService productService, IOrderService orderService, ILanguageService languageService)
+        public ReservationsController(IProductReservationService productReservationService, IProductService productService, IOrderService orderService, ILanguageService languageService, IProductAttributeParser productAttributeParser)
         {
             this._productReservationService = productReservationService;
             this._productService = productService;
             this._orderService = orderService;
             this._languageService = languageService;
+            this._productAttributeParser = productAttributeParser;
         }
 
-        public async Task<IActionResult> GetReservations(DateTime from, DateTime? to, string language)
+        public async Task<IActionResult> GetReservations(DateTime dateFrom, DateTime? dateTo, string language)
         {
             var output = new List<ReservationData>();
             var reservableProducts = (await _productService.GetProductsOfType(ProductType.Reservation)).ToDictionary(k => k.Id, v => v);
-            var orders = await _orderService.SearchOrders(createdFromUtc: from.ToUniversalTime(), createdToUtc: to?.ToUniversalTime(), os: OrderStatus.Complete);
+            var orders = await _orderService.SearchOrders(createdFromUtc: dateFrom.ToUniversalTime(), createdToUtc: dateTo?.ToUniversalTime(), os: OrderStatus.Complete);
             var languageId = (await _languageService.GetAllLanguages()).Where(x => x.LanguageCulture == language || x.LanguageCulture.StartsWith(language)).Select(x => x.Id).FirstOrDefault();
 
             foreach (var order in orders)
             {
-                var reservedSlots = await _productReservationService.GetProductReservationsByOrderId(order.Id);
+                var orderSlots = (await _productReservationService.GetProductReservationsByOrderId(order.Id)).GroupBy(x => x.OrderItemId).ToDictionary(k => k.Key, v => v.ToList());
 
-                if (reservedSlots.Any())
+                foreach (var orderItem in order.OrderItems.Where(x => reservableProducts.ContainsKey(x.ProductId)))
                 {
+                    var orderItemSlots = orderSlots[orderItem.Id];
+                    var resourcesSlots = orderItemSlots.GroupBy(x => x.Resource).ToDictionary(k => k.Key, v => v.ToList());
+                    var product = reservableProducts[orderItem.ProductId];
+                    var productName = product.GetLocalized(x => x.Name, languageId);
+                    var orderItemAttributes = _productAttributeParser.ParseProductAttributeValues(product, orderItem.AttributesXml).Select(x => x.GetLocalized(y => y.Name, languageId)).ToArray();
+
                     var outputData = new ReservationData() {
-                        Code = order.ShortId,
+                        Code = orderItem.ShortId,
                         Date = order.CreatedOnUtc,
-                        LastUpdate = order.CreatedOnUtc,
+                        LastUpdate = order.UpdatedOnUtc,
                     };
 
-                    var groupedSlots = reservedSlots.GroupBy(x => x.ProductId)
-                                                    .ToDictionary(k => k.Key, v => v.GroupBy(x => x.Resource).ToDictionary(k2 => k2.Key, v2 => new { StartDate = v2.Min(x => x.Date), EndDate = v2.Max(x => x.Date) }));
-
-                    foreach (var productGroup in groupedSlots)
+                    foreach (var resourceSlots in resourcesSlots)
                     {
-                        if (reservableProducts.ContainsKey(productGroup.Key))
-                        {
-                            var product = reservableProducts[productGroup.Key];
-                            var productName = product.GetLocalized(x => x.Name, languageId);
+                        var resource = product.Resources.Where(x => x.SystemName == resourceSlots.Key).FirstOrDefault();
 
-                            foreach (var resourceGroup in productGroup.Value)
-                            {
-                                var resource = product.Resources.Where(x => x.SystemName == resourceGroup.Key).FirstOrDefault();
+                        var outputItem = new ReservationItemData() {
+                            Code = resource.SystemName,
+                            Name = $"{productName} {resource.Name}",
+                            Latitude = resource.Latitude,
+                            Longitude = resource.Longitude,
+                            Quantity = 1,
+                            Start = resourceSlots.Value.Min(x => x.Date).Add(product.ReservationStartDelta),
+                            End = resourceSlots.Value.Max(x => x.Date).AddDays(!product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day ? 1 : 0).Add(product.ReservationEndDelta),
+                            MaxUses = null,
+                        };
 
-                                if (resource != null)
-                                {
-                                    var outputItem = new ReservationItemData() {
-                                        Code = resource.SystemName,
-                                        Name = $"{productName} {resource.Name}",
-                                        Latitude = resource.Latitude,
-                                        Longitude = resource.Longitude,
-                                        Quantity = 1,
-                                        Start = resourceGroup.Value.StartDate.Add(product.ReservationStartDelta),
-                                        End = resourceGroup.Value.EndDate.AddDays(product.IncBothDate ? 0 : 1).Add(product.ReservationEndDelta),
-                                        MaxUses = null,
-                                    };
-
-                                    outputData.Items.Add(outputItem);
-                                }
-                            }
-                        }
+                        outputData.Items.Add(outputItem);
                     }
 
-                    if (outputData.Items.Any())
-                    {
-                        outputData.Start = outputData.Items.Where(x => x.Start != null).Min(x => x.Start.Value);
-                        outputData.End = outputData.Items.Where(x => x.End != null).Max(x => x.End.Value);
-                        output.Add(outputData);
-                    }
+                    outputData.Start = outputData.Items.Where(x => x.Start != null).Min(x => x.Start.Value);
+                    outputData.End = outputData.Items.Where(x => x.End != null).Max(x => x.End.Value);
+
+                    output.Add(outputData);
                 }
             }
 

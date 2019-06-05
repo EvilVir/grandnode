@@ -14,11 +14,11 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string ResourceId { get; set; }
         public string ResourceDescription { get; set; }
         public string Color { get; set; }
-        public string OrderId { get; set; }
+        public string OrderItemId { get; set; }
         public string OrderLink { get; set; }
         public string CustomerId { get; set; }
         public string CustomerDescription { get; set; }
         public string CustomerLink { get; set; }
-        public string AdditionalServicesDescription { get; set; }
+        public string[] AdditionalServices { get; set; }
     }
 }
