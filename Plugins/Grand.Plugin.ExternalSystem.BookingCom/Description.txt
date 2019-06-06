@@ -1,0 +1,8 @@
+﻿Group: External Service Connection
+FriendlyName: Booking.com
+SystemName: ExternalSystem.BookingCom
+Version: 1.0
+SupportedVersions: 4.50
+Author: Strange Fog Studios
+DisplayOrder: 1
+FileName: Grand.Plugin.ExternalSystem.BookingCom.dll

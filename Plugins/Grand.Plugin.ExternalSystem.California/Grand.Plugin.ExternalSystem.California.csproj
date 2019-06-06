@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Authors>Strange Fog Studios</Authors>
+    <Authors>Kuba Pilecki</Authors>
+    <Company>Strange Fog Studios</Company>
     <Copyright>Copyright © Strange Fog Studios</Copyright>
   </PropertyGroup>
 
