@@ -53,7 +53,6 @@
             </span>
         </div>
     </form>
-    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Blog") @T("catalog.selectors.fiters")</span></a>
     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_posts" })
     <div class="blog-posts row">
         @foreach (var item in Model.BlogPosts)
