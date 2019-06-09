@@ -12,10 +12,10 @@
     <div class="container page-container">
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
         
-        @if (IsSectionDefined("Breadcrumb"))
+        @*@if (IsSectionDefined("Breadcrumb"))
         {
             @RenderSection("Breadcrumb")
-        }
+        }*@
 
         @RenderBody()
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })

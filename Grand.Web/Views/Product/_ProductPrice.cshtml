@@ -57,7 +57,7 @@
                     <label class="mb-0">@T("Products.Price"):</label>
                 }
                 @*render price*@
-                <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="actual-price price-value-@(Model.ProductId)" </text> }>
+                @*<span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="actual-price price-value-@(Model.ProductId)" </text> }>
                     @if (Model.IsAuction)
                     {
                         <strong class="actual-price">@T("Products.BuyNowPrice"):</strong>
@@ -70,7 +70,7 @@
                     {
                         <strong class="actual-price">@Html.Raw(Model.Price)</strong>
                     }
-                </span>
+                </span>*@
                 @if (!String.IsNullOrWhiteSpace(Model.OldPrice))
                 {
                     @*old price*@
