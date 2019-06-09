@@ -61,6 +61,7 @@ namespace Grand.Web.Controllers
             return View(templateViewPath, model);
         }
 
+
         public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
             var model = await _topicViewModelService.TopicDetailsPopup(systemName);

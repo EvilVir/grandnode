@@ -1,8 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Infrastructure;
 using Grand.Framework;
 using Grand.Framework.UI.Paging;
+using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Services.Topics;
@@ -246,7 +248,6 @@ namespace Grand.Web.Extensions
             });
             return cachedSeName;
         }
-
     }
 }
 

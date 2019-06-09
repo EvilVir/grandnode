@@ -3,54 +3,19 @@
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_before" })
 @if (Model.IsAuthenticated)
 {
-    @await Component.InvokeAsync("AdminHeaderLinks")
-    <li class="nav-item col d-flex">
-        <a class="ico-account nav-link d-flex justify-content-center" href="@Url.RouteUrl("CustomerInfo")">
-            <span class="hl-label"><span class="mdi mdi-account-circle"></span></span>
-            <span class="d-flex align-items-center mobile-desc">@T("Account.MyAccount")</span>
-        </a>
-    </li>
-    <li class="nav-item col d-flex">
-        <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
-            <span class="hl-label">
-                <span class="mdi mdi-lock"></span>
-            </span>
-            <span class="d-flex align-items-center mobile-desc">@T("Account.Logout")</span>
-        </a>
+    <li class="nav-item dropdown item-account" id="navbarNavAccountMenu">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="mdi mdi-24px mdi-account-circle"></span></a>
+        <div class="dropdown-menu position-absolute">
+            <a class="dropdown-item" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a>
+            @await Component.InvokeAsync("AdminHeaderLinks")
+            <a class="dropdown-item" href="@Url.RouteUrl("Logout")">@T("Account.Logout")</a>
+        </div>
     </li>
 }
 else
 {
-    <li class="nav-item col d-flex">
-        <a class="nav-link" href="@Url.RouteUrl("Login")">
-            <span class="hl-label">
-                <span class="mdi mdi-lock-open"></span>
-            </span>
-            <span class="d-flex align-items-center mobile-desc">@T("Account.Login")</span>
-        </a>
-    </li>
-}
-@if (Model.AllowPrivateMessages)
-{
-    <li class="nav-item col d-flex">
-        <a class="nav-link" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
-            <span class="hl-label">
-                <span class="mdi mdi-email"></span>
-            </span>
-            <span class="inbox-label d-none d-lg-flex align-items-center">@T("PrivateMessages.Inbox")</span>
-            <span class="inbox-unread d-none d-lg-flex align-items-center">@Model.UnreadPrivateMessages</span>
-            <span class="d-lg-none d-flex align-items-center text-muted mobile-desc">@T("PrivateMessages.Inbox")</span>
-        </a>
+    <li class="nav-item">
+        <a class="nav-link ico-account" href="@Url.RouteUrl("Login")" title="@T("Account.Login")"><span class="mdi mdi-24px mdi-lock-open"></span></a>
     </li>
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
-@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
-{
-    //new private message notification
-    <script asp-location="Footer">
-            $(document).ready(function () {
-                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
-            });
-    </script>
-}
-
