@@ -73,6 +73,13 @@ else
             var quantitySelector = $('#addtocart_@(Model.Id)_EnteredQuantity');
             var serverDatesFormat = 'MM/DD/YYYY';
             var getDatesForMonthUrl = '@Html.Raw(Url.Action("GetInactiveDatesForMonth", "Product", new { productId = Model.Id, monthOffset = 1, quantity = "PLACEHOLDER_QUANTITY", month = "PLACEHOLDER_MONTH", year = "PLACEHOLDER_YEAR"  }))';
+            var disabledDates = [];
+
+
+            function onBeforeShowDay(d) {
+                var check = disabledDates.indexOf(d.getTime());
+                return check === -1;
+            }
 
             datePickersGroup.bootstrapDatepicker({
                 inputs: [startDatePicker, endDatePicker],
@@ -81,7 +88,8 @@ else
                 clearBtn: true,
                 todayBtn: false,
                 todayHighlight: false,
-                weekStart: 1
+                weekStart: 1,
+                beforeShowDay: onBeforeShowDay
             }).on('changeDate', function (e) {
                 var startDate = startDatePicker.bootstrapDatepicker('getDate');
                 var endDate = endDatePicker.bootstrapDatepicker('getDate');
@@ -97,11 +105,6 @@ else
             startDatePicker.css('display', 'none');
 
             endDatePicker.on('changeMonth', function (e) {
-                var startDate = startDatePicker.bootstrapDatepicker('getDate');
-                var endDate = endDatePicker.bootstrapDatepicker('getDate');
-
-                console.log(startDate);
-                console.log(endDate);
 
                 var d = e.date;
 
@@ -121,13 +124,18 @@ else
                         data: {},
                     }).done(function (data) {
 
+                        startDatePicker.find('[data-date]').removeClass('disabled disabled-date');
+                        endDatePicker.find('[data-date]').removeClass('disabled disabled-date');
+
+                        disabledDates = [];
+
                         for (var i = 0; i < data.length; i++) {
-                            data[i] = moment.utc(data[i], 'YYYY-MM-DD').toDate();
+                            var date = moment.utc(data[i], 'YYYY-MM-DD');
+                            var timestamp = date.toDate().getTime();
+                            disabledDates.push(date.subtract('hours', 2).toDate().getTime());
+                            startDatePicker.find('[data-date=' + timestamp + ']').addClass('disabled disabled-date');
+                            endDatePicker.find('[data-date=' + timestamp + ']').addClass('disabled disabled-date');
                         }
-
-                        startDatePicker.bootstrapDatepicker('setDatesDisabled', data);
-                        endDatePicker.bootstrapDatepicker('setDatesDisabled', data);
-
 
                     }).fail(function () {
 

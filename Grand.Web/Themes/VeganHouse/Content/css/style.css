@@ -16,6 +16,11 @@ html, body {
     display: none;
 }
 
+.progress-bar {
+    background-color: #16A97A !important;
+    border: 1px solid #123135 !important;
+}
+
 .nav-item:hover,
 .dropdown-item:hover,
 .nav-item.active,
@@ -459,8 +464,8 @@ main .page-container a:hover, main .page-container a:active {
     color: #123135;
 }
 
-.product-details-page .reservation .disabled.disabled-date {
-    color: #cccccc;
+.product-details-page .reservation .disabled {
+    color: #cccccc !important;
 }
 
 
@@ -485,9 +490,11 @@ main .page-container a:hover, main .page-container a:active {
     color: #FFFFFF;
 }
 
-.product-details-page .reservation .disabled.disabled-date.range {
-    background-color: #cacaca;
-    color: #FFFFFF;
+.product-details-page .reservation .disabled.range,
+.product-details-page .reservation .disabled.range-start,
+.product-details-page .reservation .disabled.range-end {
+    background-color: #cacaca !important;
+    color: #FFFFFF !important;
 }
 
 /** Shopping cart */
