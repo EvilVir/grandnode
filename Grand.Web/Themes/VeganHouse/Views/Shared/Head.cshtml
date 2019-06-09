@@ -22,6 +22,7 @@
     Html.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/bootstrap.min.css");
     Html.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/datepicker/bootstrap-datepicker.min.css");
 
+    Html.AppendScriptParts(ResourceLocation.Footer, string.Format("~/Themes/{0}/Content/js/wow.min.js", themeName));
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.magnific-popup.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.actions.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.search.js");
@@ -42,3 +43,7 @@
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-3.3.1.min.js");
 }
+
+<script asp-location="Footer">
+    new WOW().init({ animateClass: "animated" });
+</script>

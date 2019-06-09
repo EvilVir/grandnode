@@ -8,7 +8,7 @@
 
     @if (Model.DisplayAdminLink)
     {
-        <a class="dropdown-item" href="@Url.RouteUrl("~/Admin")">@T("Admin")</a>
+        <a class="dropdown-item" href="@Url.Content("~/Admin")">@T("Admin")</a>
     }
 
     @if (!string.IsNullOrEmpty(Model.EditPageUrl))

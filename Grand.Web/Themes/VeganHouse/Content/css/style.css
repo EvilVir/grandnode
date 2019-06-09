@@ -85,6 +85,7 @@ header #navbarNavEuLogo img {
 #navbarNavSecondaryMenu .item-products {
     background-color: #458D87;
     padding-top: 6px;
+    text-transform: uppercase;
 }
 
 #navbarNavSecondaryMenu .item-languages {
@@ -154,6 +155,54 @@ header #navbarNavEuLogo img {
     }
 }
 
+/** Footer */
+footer {
+    background-color: #123135;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+
+footer a, footer p {
+    color: #FFFFFF !important;
+}
+
+footer a:hover {
+    color: #91e2cc !important;
+}
+
+footer h5 {
+    color: #91e2cc;
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 21px;
+}
+
+#footerSocialMedia .list-group-item {
+    border-radius: 0px;
+    padding: 0px;
+    border: none;
+    background-color: transparent;
+}
+
+#footerSocialMedia .list-group-item a {
+    padding-top: 0.75rem;
+    padding-right: 1.25rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1.25rem;
+    color: #FFFFFF;
+}
+
+#footerLogos {
+    background-color: #FFFFFF;
+}
+/** EuCookieLaw Component */
+#eu-cookie-bar-notification {
+    position: absolute;
+    z-index: 10000;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+}
 
 /** Animate.css enhancements */
 @keyframes bounce-with-delay {
