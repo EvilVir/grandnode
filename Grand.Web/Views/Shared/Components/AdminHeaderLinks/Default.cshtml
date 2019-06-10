@@ -3,16 +3,33 @@
 {
     @if (Model.IsCustomerImpersonated)
     {
-        <a class="dropdown-item" href="@Url.RouteUrl("Logout")">@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</a>
+        <li class="nav-item col d-flex align-items-center">
+            <span class="impersonated-text">@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
+            <a class="nav-link finish-impersonation p-0" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
+                <span class="mdi mdi-close pl-2"></span>
+            </a>
+        </li>
     }
-
     @if (Model.DisplayAdminLink)
     {
-        <a class="dropdown-item" href="@Url.Content("~/Admin")">@T("Admin")</a>
+        <li class="nav-item col d-flex">
+            <a class="nav-link" href="@Url.Content("~/Admin")">
+                <span class="hl-label">
+                    <span class="mdi mdi-settings pr-1"></span>
+                </span>
+                <span class="d-lg-none d-block text-muted mobile-desc">@T("admin")</span>
+            </a>
+        </li>
     }
-
     @if (!string.IsNullOrEmpty(Model.EditPageUrl))
     {
-        <a class="dropdown-item" href="@Model.EditPageUrl">@T("Edit")</a>
+        <li class="nav-item col d-sm-flex d-none">
+            <a target="_blank" class="nav-link edit-page" href="@Model.EditPageUrl">
+                <span class="hl-label">
+                    <span class="mdi mdi-wrench-outline"></span>
+                </span>
+                <span class="d-lg-none d-block text-muted mobile-desc">@T("edit")</span>
+            </a>
+        </li>
     }
 }

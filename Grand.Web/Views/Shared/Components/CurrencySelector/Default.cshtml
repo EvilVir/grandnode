@@ -3,14 +3,33 @@
 @if (Model.AvailableCurrencies.Count > 1)
 {
     var returnUrl = webHelper.GetRawUrl(Context.Request);
-
-    <li class="nav-item dropdown item-currencies" id="navbarNavCurrencyMenu">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Model.AvailableCurrencies.First(x => x.Id == Model.CurrentCurrencyId).CurrencySymbol</a>
-        <div class="dropdown-menu position-absolute dropdown-menu-right">
-            @foreach (var currency in Model.AvailableCurrencies.Where(x => x.Id != Model.CurrentCurrencyId))
-            {
-                <a class="dropdown-item" href="@Url.RouteUrl("ChangeCurrency", new { customercurrency = currency.Id, returnUrl })">@currency.CurrencySymbol</a>
-            }
-        </div>
-    </li>
+    <div class="currency-selector d-block pr-1">
+         @{   
+             var currencies = Model.AvailableCurrencies.Select(x => new
+             {
+                 Name = x.Name,
+                 Text = x.CurrencyCode,
+                 Value = Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id, returnUrl }),
+                 Selected = x.Id.Equals(Model.CurrentCurrencyId)
+             });
+            <div class="btn-group btn-group-sm float-xs-right">
+                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                    @currencies.FirstOrDefault(x => x.Selected).Text
+                    <span class="sr-only">Toggle Dropdown</span>
+                    <span class="mdi mdi-chevron-down"></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <ul class="pl-0 mb-0">
+                        @foreach (var item in currencies)
+                        {
+                            var className = item.Selected ? "active" : "";
+                            <li class="@className">
+                                <a href="@item.Value">@item.Text</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
 }

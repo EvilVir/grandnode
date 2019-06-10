@@ -93,39 +93,10 @@
     </div>
 }
 <div class="page topic-page" id="ph-topic">
+    <div class="page-title" id="ph-title">
+        <h1>@Model.Title</h1>
+    </div>
     <div class="page-body">
         @Html.Raw(Model.Body)
     </div>
 </div>
-
-<script asp-location="Footer">
-    $(document).ready(function () {
-
-        $('.img-popup-gallery img').each(function () {
-            $(this).attr('data-mfp-src', $(this).attr('src'));
-        });
-
-        var i = 0; var step = 0.1;
-        $('.topic img').each(function () {
-            i += step;
-            $(this).addClass('topic-wow fadeIn');//.attr('data-wow-delay', i + 's');
-        });
-
-        new WOW(
-        {
-            boxClass:     'topic-wow',
-            animateClass: 'animated',
-        }).init();
-
-        $('.img-popup-gallery').each(function () {
-            $(this).magnificPopup({
-                delegate: 'img',
-                type: 'image',
-                gallery: {
-                    enabled: true
-                }
-            });
-        });
-
-    });
-</script>

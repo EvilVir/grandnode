@@ -1,6 +1,7 @@
 ﻿@model LogoModel
-<a href="@Url.RouteUrl("HomePage")" class="ml-2 mr-2">
-    <img class="img-fluid d-none d-xl-inline" title="" alt="@Model.StoreName" src="/Themes/VeganHouse/Content/images/logo_vh.png">
-    <img class="img-fluid d-inline d-xl-none" title="" alt="@Model.StoreName" src="/Themes/VeganHouse/Content/images/logo_vh_white.png">
-    <span class="sr-only">@T("admin.configuration.shipping.providers.fields.logo")</span>
-</a>
+<h1 class="store-logo mb-0">
+        <a href="@Url.RouteUrl("HomePage")">
+            <img class="img-fluid" title="" alt="@Model.StoreName" src="@Model.LogoPath">
+            <span class="sr-only">@T("admin.configuration.shipping.providers.fields.logo")</span>
+        </a>
+</h1>

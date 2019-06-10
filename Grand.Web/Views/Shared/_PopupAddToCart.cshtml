@@ -44,7 +44,7 @@
                     <div class="col-md-9 col-12 mb-3 modal-border d-flex">
                         <div class="row">
                             <div class="form-group mb-0">
-                                <h4 class="mb-3">
+                                <h4 class="mb-0">
                                     <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="text-center">@Model.ProductName</a>
                                 </h4>
                             </div>
@@ -119,7 +119,7 @@
                                     <label class="pl-3 mb-0">@Model.Price</label>
                                 }
                             </div>
-                            @*<div class="text-center modal-padding-off w-100 p-3">
+                            <div class="text-center modal-padding-off w-100 p-3">
                                 <h5 class="w-100 mb-0">@text</h5>
                                 @if (!string.IsNullOrEmpty(Model.SubTotalDiscount))
                                 {
@@ -135,13 +135,13 @@
                                         <label class="pl-3 mb-0 text-dark mb-0">@Model.SubTotal</label>
                                     </div>
                                 }
-                            </div>*@
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer px-0 pb-0">
-                <div class="btn-group offset-md-5 col-12 px-0">
+                <div class="btn-group offset-md-5 col-md-7 col-12 px-0">
                     <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" data-dismiss="modal">@T("AddToCart.Continue")</button>
                     @if (Model.CartType == ShoppingCartType.ShoppingCart)
                     {
