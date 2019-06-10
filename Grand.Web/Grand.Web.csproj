@@ -49,6 +49,9 @@
     <None Remove="Plugins\**" />
   </ItemGroup>  
   <ItemGroup>
+    <None Remove="Themes\VeganHouse\Content\js\scripts.js" />
+  </ItemGroup>  
+  <ItemGroup>
     <None Include="wwwroot\content\bootstrap\datepicker\locales\bootstrap-datepicker-en-ca.min.js" />
     <None Include="wwwroot\content\bootstrap\datepicker\locales\bootstrap-datepicker.ar-tn.min.js" />
     <None Include="wwwroot\content\bootstrap\datepicker\locales\bootstrap-datepicker.ar.min.js" />

@@ -171,5 +171,6 @@ namespace Grand.Core.Data
         /// <param name="query"></param>
         /// <returns></returns>
         IList<T> FindByFilterDefinition(FilterDefinition<T> query);
+
     }
 }

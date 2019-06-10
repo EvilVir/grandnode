@@ -2,18 +2,21 @@
 
 @foreach (var topic in Model)
 {
+    var additionalCssClass = ViewBag.TopicPath?.Contains(topic.SystemName) == true ? " active" : "";
+
     if (!topic.Children.Any())
     {
-        <li class="nav-item"><a class="nav-link" href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+        <li class="nav-item@(additionalCssClass)"><a class="nav-link" href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
     }
     else
     {
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown@(additionalCssClass)">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@topic.Name</a>
             <div class="dropdown-menu dropdown-primary">
                 @foreach (var subtopic in topic.Children)
                 {
-                    <a class="dropdown-item" href="@Url.RouteUrl("Topic", new { SeName = subtopic.SeName })">@subtopic.Name</a>
+                    var additionalCssClass2 = ViewBag.TopicPath?.Contains(subtopic.SystemName) == true ? " active" : "";
+                    <a class="dropdown-item@(additionalCssClass2)" href="@Url.RouteUrl("Topic", new { SeName = subtopic.SeName })">@subtopic.Name</a>
                 }
             </div>
         </li>

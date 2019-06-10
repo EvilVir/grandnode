@@ -1,4 +1,6 @@
 using Grand.Core.Domain.Topics;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -48,5 +50,7 @@ namespace Grand.Services.Topics
         /// </summary>
         /// <param name="topic">Topic</param>
         Task UpdateTopic(Topic topic);
+
+        Task<IList<string>> GetTopicHierarchyPath(string systemName);
     }
 }

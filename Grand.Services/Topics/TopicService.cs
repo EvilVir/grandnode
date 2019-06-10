@@ -43,6 +43,8 @@ namespace Grand.Services.Topics
         /// </summary>
         private const string TOPICS_PATTERN_KEY = "Grand.topics.";
 
+        private const string TOPIC_HIERARCHY_KEY = "Grand.topics.hierarchy.system-name.{0}";
+
         #endregion
 
         #region Fields
@@ -201,6 +203,29 @@ namespace Grand.Services.Topics
 
             //event notification
             await _eventPublisher.EntityUpdated(topic);
+        }
+
+        public async Task<IList<string>> GetTopicHierarchyPath(string systemName)
+        {
+            var key = string.Format(TOPIC_HIERARCHY_KEY, systemName);
+
+            return await _cacheManager.GetAsync(key, async () =>
+            {
+
+                var output = new List<string>();
+
+                while (!string.IsNullOrEmpty(systemName))
+                {
+                    var topic = await _topicRepository.Table.Where(x => x.SystemName == systemName).FirstOrDefaultAsync();
+                    if (topic != null)
+                    {
+                        output.Insert(0, topic.SystemName);
+                        systemName = topic.ParentTopicId;
+                    }
+                }
+
+                return output;
+            });
         }
 
         #endregion

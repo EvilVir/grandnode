@@ -69,12 +69,8 @@
 }
 else
 {
-    <div class="generalMarginSupporter">
-        @if (!String.IsNullOrEmpty(Model.Title))
-        {
-            <h2 class="generalTitle text-sm-center">@Model.Title</h2>
-        }
-        <div class="topic-block-body mpt-3 pt-3">
+    <div class="block topic-block">
+        <div class="topic-body">
             @Html.Raw(Model.Body)
         </div>
     </div>

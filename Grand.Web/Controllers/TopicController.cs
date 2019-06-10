@@ -62,6 +62,7 @@ namespace Grand.Web.Controllers
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = "Admin" }));
 
+            ViewBag.TopicPath = await _topicService.GetTopicHierarchyPath(model.SystemName);
             _pageHeadBuilder.AddPageCssClassParts($"topic topic-{model.SystemName.ToLowerInvariant()}");
 
             return View(templateViewPath, model);
