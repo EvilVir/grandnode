@@ -24,6 +24,8 @@ COPY Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj Plugin
 COPY Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj
 COPY Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj
 COPY Plugins/Grand.Plugin.ExternalSystem.California/Grand.Plugin.ExternalSystem.California.csproj Plugins/Grand.Plugin.ExternalSystem.California/Grand.Plugin.ExternalSystem.California.csproj
+COPY Plugins/Grand.Plugin.Payments.DotPay/Grand.Plugin.Payments.DotPay.csproj Plugins/Grand.Plugin.Payments.DotPay/Grand.Plugin.Payments.DotPay.csproj
+COPY Plugins/Grand.Plugin.ExternalSystem.BookingCom/Grand.Plugin.ExternalSystem.BookingCom.csproj Plugins/Grand.Plugin.ExternalSystem.BookingCom/Grand.Plugin.ExternalSystem.BookingCom.csproj
 
 # Copy everything else and build
 COPY . ./

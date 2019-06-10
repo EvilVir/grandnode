@@ -55,8 +55,4 @@
     </None>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(OutDir)..\bin\&quot;" />
-  </Target>
-
 </Project>
