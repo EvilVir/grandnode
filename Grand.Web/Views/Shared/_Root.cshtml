@@ -9,7 +9,7 @@
 
 <main role="main">
     <partial name="Header" />
-    <div class="container page-container">
+    <div class="container page-container @Html.GrandPageCssClasses(includeClassElement: false)">
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
         
         @*@if (IsSectionDefined("Breadcrumb"))

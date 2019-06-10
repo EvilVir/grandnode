@@ -1,3 +1,4 @@
+using AutoMapper.Configuration.Annotations;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
@@ -486,14 +487,24 @@ namespace Grand.Services.Catalog
                 if (product.ProductType == ProductType.Reservation)
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
                     {
+                        var re = rentalEndDate;
+                        var rs = rentalStartDate;
+
+                        if (product.IntervalUnitType == IntervalUnit.Day)
+                        {
+                            // Reset to full days, whithout deltas
+                            rs = rs.Value.Date;
+                            re = re.Value.Date;
+                        }
+
                         decimal d = 0;
                         if (product.IncBothDate)
                         {
-                            decimal.TryParse(((rentalEndDate - rentalStartDate).Value.TotalDays + 1).ToString(), out d);
+                            decimal.TryParse(((re - rs).Value.TotalDays + 1).ToString(), out d);
                         }
                         else
                         {
-                            decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
+                            decimal.TryParse((re - rs).Value.TotalDays.ToString(), out d);
                         }
                         price = price * d;
                     }

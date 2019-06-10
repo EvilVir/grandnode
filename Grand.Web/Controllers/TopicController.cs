@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Framework.UI;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
@@ -19,6 +20,7 @@ namespace Grand.Web.Controllers
         private readonly IAclService _aclService;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
+        private readonly IPageHeadBuilder _pageHeadBuilder;
 
         #endregion
 
@@ -30,7 +32,8 @@ namespace Grand.Web.Controllers
             IStoreMappingService storeMappingService,
             IAclService aclService,
             IPermissionService permissionService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IPageHeadBuilder pageHeadBuilder)
         {
             this._topicService = topicService;
             this._topicViewModelService = topicViewModelService;
@@ -39,6 +42,7 @@ namespace Grand.Web.Controllers
             this._aclService = aclService;
             this._permissionService = permissionService;
             this._workContext = workContext;
+            this._pageHeadBuilder = pageHeadBuilder;
         }
 
         #endregion
@@ -58,6 +62,8 @@ namespace Grand.Web.Controllers
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = "Admin" }));
 
+            _pageHeadBuilder.AddPageCssClassParts($"topic topic-{model.SystemName.ToLowerInvariant()}");
+
             return View(templateViewPath, model);
         }
 
@@ -71,6 +77,7 @@ namespace Grand.Web.Controllers
             //template
             var templateViewPath = await _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
 
+            _pageHeadBuilder.AddPageCssClassParts($"topic topic-{model.SystemName.ToLowerInvariant()}");
             ViewBag.IsPopup = true;
             return View(templateViewPath, model);
         }
