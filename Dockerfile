@@ -25,7 +25,7 @@ COPY Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAna
 COPY Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj
 COPY Plugins/Grand.Plugin.ExternalSystem.California/Grand.Plugin.ExternalSystem.California.csproj Plugins/Grand.Plugin.ExternalSystem.California/Grand.Plugin.ExternalSystem.California.csproj
 COPY Plugins/Grand.Plugin.Payments.DotPay/Grand.Plugin.Payments.DotPay.csproj Plugins/Grand.Plugin.Payments.DotPay/Grand.Plugin.Payments.DotPay.csproj
-COPY Plugins/Grand.Plugin.ExternalSystem.BookingCom/Grand.Plugin.ExternalSystem.BookingCom.csproj Plugins/Grand.Plugin.ExternalSystem.BookingCom/Grand.Plugin.ExternalSystem.BookingCom.csproj
+COPY Plugins/Grand.Plugin.ExternalSystem.ReservationsSynchronization/Grand.Plugin.ExternalSystem.ReservationsSynchronization.csproj Plugins/Grand.Plugin.ExternalSystem.ReservationsSynchronization/Grand.Plugin.ExternalSystem.ReservationsSynchronization.csproj
 
 # Copy everything else and build
 COPY . ./
@@ -46,6 +46,8 @@ RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
 RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
 RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 RUN dotnet build Plugins/Grand.Plugin.ExternalSystem.California
+RUN dotnet build Plugins/Grand.Plugin.Payments.DotPay
+RUN dotnet build Plugins/Grand.Plugin.ExternalSystem.ReservationsSynchronization
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2

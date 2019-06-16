@@ -8,26 +8,20 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Grand.Web\Plugins\ExternalSystem.BookingCom\</OutputPath>
+    <OutputPath>..\..\Grand.Web\Plugins\ExternalSystem.ReservationsSynchronization\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\Grand.Web\Plugins\ExternalSystem.BookingCom\</OutputPath>
+    <OutputPath>..\..\Grand.Web\Plugins\ExternalSystem.ReservationsSynchronization\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Views\ExternalBookingCom\_ViewImports.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Views\ExternalBookingCom\_ViewImports.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <PackageReference Include="Ical.Net" Version="4.1.11" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,12 +33,12 @@
 
   <ItemGroup>
     <None Update="Description.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Views\ExternalBookingCom\Configure.cshtml">
+    <None Update="Views\ExternalReservationsSynchronization\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
