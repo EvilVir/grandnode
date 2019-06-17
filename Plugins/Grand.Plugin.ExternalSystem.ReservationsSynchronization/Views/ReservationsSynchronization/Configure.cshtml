@@ -1,0 +1,261 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+@model ReservationsSynchronizationSettingsModel
+@using Grand.Plugin.ExternalSystem.ReservationsSynchronization.Models;
+@using Grand.Framework;
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+
+<admin-tabstrip name="topic-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Configuration.Settings")" tab-index="0">
+            <content>
+                <div id="general-settings">
+                    <form asp-controller="ReservationsSynchronization" asp-action="Configure" method="post">
+                        <antiforgery-token />
+                        <div class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <div class="col-md-3 col-sm-3 text-right">
+                                        <admin-label asp-for="SynchronizationInterval" class="control-label" />
+                                    </div>
+                                    <div class="col-md-9 col-sm-9">
+                                        <admin-input asp-for="SynchronizationInterval" />
+                                        <span asp-validation-for="SynchronizationInterval"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                        <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.ExternalCalendars")" tab-index="1">
+            <content>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="external-calendars-grid"></div>
+                    </div>
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.PublishedCalendars")" tab-index="2">
+            <content>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="published-calendars-grid"></div>
+                    </div>
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#external-calendars-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        create: {
+                            url: "@Html.Raw(Url.Action("ExternalCalendarAdd", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        read: {
+                            url: "@Html.Raw(Url.Action("ExternalCalendarList", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("ExternalCalendarUpdate", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ExternalCalendarDelete", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductId: { editable: true, type: "string" },
+                                ResourceSystemName: { editable: true, type: "string" },
+                                Url: { editable: true, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function(e) {
+                        if(e.type=="update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                editable: {
+                    confirmation: true,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductId",
+                    title: "@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.ExternalCalendar.ProductId")",
+                    template: '#=ProductId#',
+                }, {
+                    field: "ResourceSystemName",
+                    title: "@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.ExternalCalendar.ResourceSystemName")",
+                    template: '#=ResourceSystemName#',
+                }, {
+                    field: "Url",
+                    title: "@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.ExternalCalendar.Url")",
+                    template: '#=Url#',
+                }, {
+                    command: [{
+                        name: "edit",
+                        text: {
+                            edit: "@T("Admin.Common.Edit")",
+                            update: "@T("Admin.Common.Update")",
+                            cancel: "@T("Admin.Common.Cancel")"
+                        }
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }]
+                }]
+            });
+        });
+</script>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#published-calendars-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        create: {
+                            url: "@Html.Raw(Url.Action("PublishedCalendarAdd", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        read: {
+                            url: "@Html.Raw(Url.Action("PublishedCalendarList", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("PublishedCalendarUpdate", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("PublishedCalendarDelete", "ReservationsSynchronization"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductId: { editable: true, type: "string" },
+                                ResourceSystemName: { editable: true, type: "string" },
+                                PastDays: { editable: true, type: "number" },
+                                Url: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function(e) {
+                        if(e.type=="update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                editable: {
+                    confirmation: true,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductId",
+                    title: "@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.PublishedCalendar.ProductId")",
+                    template: '#=ProductId#',
+                }, {
+                    field: "ResourceSystemName",
+                    title: "@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.PublishedCalendar.ResourceSystemName")",
+                    template: '#=ResourceSystemName#',
+                }, {
+                    field: "PastDays",
+                    title: "@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.PublishedCalendar.PastDays")",
+                    template: '#=PastDays#',
+                }, {
+                    field: "Url",
+                    title: "@T("Plugins.ExternalSystem.ReservationsSynchronization.Fields.PublishedCalendar.Url")",
+                    template: '#=Url#',
+                }, {
+                    command: [{
+                        name: "edit",
+                        text: {
+                            edit: "@T("Admin.Common.Edit")",
+                            update: "@T("Admin.Common.Update")",
+                            cancel: "@T("Admin.Common.Cancel")"
+                        }
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }]
+                }]
+            });
+        });
+</script>

@@ -1,6 +1,8 @@
-﻿using MongoDB.Driver;
+﻿using Grand.Core.Domain.Common;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -172,5 +174,8 @@ namespace Grand.Core.Data
         /// <returns></returns>
         IList<T> FindByFilterDefinition(FilterDefinition<T> query);
 
+        Task<IEnumerable<T>> GetByGenericAttributesAsync(IEnumerable<GenericAttribute> attributes);
+
+        Task<bool> CheckIfExistsByGenericAttributesAsync(IEnumerable<GenericAttribute> attributes);
     }
 }

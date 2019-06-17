@@ -7,6 +7,7 @@ namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization
     {
         public class ExternalCalendarSettings
         {
+            public string Id { get; set; }
             public string ProductId { get; set; }
             public string ResourceSystemName { get; set; }
             public string Url { get; set; }
@@ -21,6 +22,7 @@ namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization
         }
 
         public List<ExternalCalendarSettings> ExternalCalendars { get; set; } = new List<ExternalCalendarSettings>();
+
         public List<PublishedCalendarSettings> PublishedCalendars { get; set; } = new List<PublishedCalendarSettings>();
     }
 }

@@ -409,7 +409,7 @@ namespace Grand.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual async Task<Customer> InsertGuestCustomer(Store store, string urlreferrer = "")
+        public virtual async Task<Customer> InsertGuestCustomer(Store store, string urlreferrer = "", string systemName = null, string email = null)
         {
             var customer = new Customer {
                 CustomerGuid = Guid.NewGuid(),
@@ -417,7 +417,9 @@ namespace Grand.Services.Customers
                 StoreId = store.Id,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
-                UrlReferrer = urlreferrer
+                UrlReferrer = urlreferrer,
+                SystemName = systemName,
+                Email = email
             };
 
             //add to 'Guests' role

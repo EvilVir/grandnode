@@ -1320,7 +1320,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var output = new List<ReservationCalendarModel>();
 
             var reservableProducts = (await _productService.GetProductsOfType(ProductType.Reservation)).ToDictionary(k => k.Id, v => v);
-            var orders = await _orderService.SearchOrders(anyReservationItemFromUtc: dateFrom, anyReservationItemToUtc: dateTo, os: OrderStatus.Complete);
+            var orders = await _orderService.SearchOrders(anyReservationItemFromUtc: dateFrom, anyReservationItemToUtc: dateTo, nos: OrderStatus.Cancelled);
 
             foreach (var order in orders)
             {
@@ -1328,6 +1328,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 foreach (var orderItem in order.OrderItems.Where(x => reservableProducts.ContainsKey(x.ProductId)))
                 {
+                    if (!orderSlots.ContainsKey(orderItem.Id))
+                    {
+                        continue;
+                    }
+
                     var orderItemSlots = orderSlots[orderItem.Id];
                     var resourcesSlots = orderItemSlots.GroupBy(x => x.Resource).ToDictionary(k => k.Key, v => v.ToList());
                     var product = reservableProducts[orderItem.ProductId];
@@ -1344,7 +1349,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                             Start = resourceSlots.Value.Min(x => x.Date).Add(product.ReservationStartDelta),
                             End = resourceSlots.Value.Max(x => x.Date).Add(product.ReservationEndDelta).AddDays(!product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day ? 1 : 0),
                             ResourceId = resource.SystemName,
-                            Color = resource.Color,
+                            Color = order.OrderStatus == OrderStatus.Complete ? resource.Color : "#CCCCCC",
                             ResourceDescription = $"{productName} {resource.Name}",
                             CustomerId = order.CustomerId,
                             CustomerDescription = ($"{order.FirstName} {order.LastName}".Trim() + (!string.IsNullOrEmpty(order.CompanyName) ? $" ({order.CompanyName})" : "")).Trim(),
@@ -1352,7 +1357,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                             AdditionalServices = orderItemAttributes
                         });
                     }
-
                 }
             }
 

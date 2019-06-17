@@ -35,7 +35,7 @@ namespace Grand.Plugin.ExternalSystem.California.Controllers
         {
             var output = new List<ReservationData>();
             var reservableProducts = (await _productService.GetProductsOfType(ProductType.Reservation)).ToDictionary(k => k.Id, v => v);
-            var orders = await _orderService.SearchOrders(createdFromUtc: dateFrom.ToUniversalTime(), createdToUtc: dateTo?.ToUniversalTime(), os: OrderStatus.Complete);
+            var orders = await _orderService.SearchOrders(anyReservationItemFromUtc: dateFrom.ToUniversalTime(), anyReservationItemToUtc: dateTo?.ToUniversalTime(), nos: OrderStatus.Cancelled);
             var languageId = (await _languageService.GetAllLanguages()).Where(x => x.LanguageCulture == language || x.LanguageCulture.StartsWith(language)).Select(x => x.Id).FirstOrDefault();
 
             foreach (var order in orders)
@@ -44,6 +44,11 @@ namespace Grand.Plugin.ExternalSystem.California.Controllers
 
                 foreach (var orderItem in order.OrderItems.Where(x => reservableProducts.ContainsKey(x.ProductId)))
                 {
+                    if (!orderSlots.ContainsKey(orderItem.Id))
+                    {
+                        continue;
+                    }
+
                     var orderItemSlots = orderSlots[orderItem.Id];
                     var resourcesSlots = orderItemSlots.GroupBy(x => x.Resource).ToDictionary(k => k.Key, v => v.ToList());
                     var product = reservableProducts[orderItem.ProductId];

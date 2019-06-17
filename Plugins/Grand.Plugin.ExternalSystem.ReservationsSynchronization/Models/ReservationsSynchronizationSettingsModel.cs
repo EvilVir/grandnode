@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization.Models
 {
@@ -11,6 +11,8 @@ namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization.Models
         [Validator(typeof(ReservationsSynchronizationSettingsModelValidator.ExternalCalendarModelValidator))]
         public class ExternalCalendarModel
         {
+            public string Id { get; set; }
+
             [GrandResourceDisplayName("Plugins.ExternalSystem.ReservationsSynchronization.Fields.ExternalCalendar.ProductId")]
             public string ProductId { get; set; }
 
@@ -38,16 +40,6 @@ namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization.Models
             [GrandResourceDisplayName("Plugins.ExternalSystem.ReservationsSynchronization.Fields.PublishedCalendar.PastDays")]
             public int PastDays { get; set; } = 7;
         }
-
-        public string ActiveStoreScopeConfiguration { get; set; }
-
-        [GrandResourceDisplayName("Plugins.ExternalSystem.ReservationsSynchronization.Fields.ExternalCalendars")]
-        public List<ExternalCalendarModel> ExternalCalendars { get; set; } = new List<ExternalCalendarModel>();
-        public bool ExternalCalendars_OverrideForStore { get; set; }
-
-        [GrandResourceDisplayName("Plugins.ExternalSystem.ReservationsSynchronization.Fields.PublishedCalendars")]
-        public List<PublishedCalendarModel> PublishedCalendars { get; set; } = new List<PublishedCalendarModel>();
-        public bool PublishedCalendars_OverrideForStore { get; set; }
 
         [GrandResourceDisplayName("Plugins.ExternalSystem.ReservationsSynchronization.Fields.SynchronizationInterval")]
         public int SynchronizationInterval { get; set; }

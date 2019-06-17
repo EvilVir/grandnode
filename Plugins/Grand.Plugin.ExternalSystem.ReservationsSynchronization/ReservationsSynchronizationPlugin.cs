@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Plugins;
+using Grand.Plugin.ExternalSystem.ReservationsSynchronization.Controllers;
 using Grand.Plugin.ExternalSystem.ReservationsSynchronization.Tasks;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
@@ -13,6 +14,7 @@ namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization
     public class ReservationsSynchronizationPlugin : BasePlugin
     {
         public static readonly string TASK_TYPE_NAME = $"{typeof(ReservationsSynchronizationTask).FullName}, {typeof(ReservationsSynchronizationTask).Assembly.GetName().Name}";
+        public static readonly string GUEST_CUSTOMER_SYSTEM_NAME = $"{nameof(ReservationsSynchronizationPlugin)}_GUEST_CUSTOMER";
 
         protected readonly IScheduleTaskService _scheduleTaskService;
         protected readonly ISettingService _settingService;
@@ -29,7 +31,12 @@ namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization
 
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocation()}Admin/ExternalReservationsSynchronization/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/ReservationsSynchronization/Configure";
+        }
+
+        public virtual Type GetControllerType()
+        {
+            return typeof(ReservationsSynchronizationController);
         }
 
         public override async Task Install()

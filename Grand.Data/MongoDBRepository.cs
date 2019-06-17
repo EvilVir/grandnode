@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Data;
+using Grand.Core.Domain.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -329,6 +330,42 @@ namespace Grand.Data
         }
 
 
+        /// <summary>
+        /// Get collection by filter definitions
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public virtual IList<T> FindByFilterDefinition(FilterDefinition<T> query)
+        {
+            return this._collection.Find(query).ToList();
+        }
+
+        public virtual async Task<IEnumerable<T>> GetByGenericAttributesAsync(IEnumerable<GenericAttribute> attributes)
+        {
+            var builder = Builders<T>.Filter;
+            var filter = FilterDefinition<T>.Empty;
+
+            foreach (var attribute in attributes)
+            {
+                filter &= builder.Where(x => x.GenericAttributes.Any(y => y.Key == attribute.Key && y.Value == attribute.Value));
+            }
+
+            return await (await this._collection.FindAsync(filter)).ToListAsync();
+        }
+
+        public virtual async Task<bool> CheckIfExistsByGenericAttributesAsync(IEnumerable<GenericAttribute> attributes)
+        {
+            var builder = Builders<T>.Filter;
+            var filter = FilterDefinition<T>.Empty;
+
+            foreach (var attribute in attributes)
+            {
+                filter &= builder.Where(x => x.GenericAttributes.Any(y => y.Key == attribute.Key && y.Value == attribute.Value));
+            }
+
+            return await (await this._collection.FindAsync(filter)).AnyAsync();
+        }
+
         #endregion
 
         #region Properties
@@ -339,16 +376,6 @@ namespace Grand.Data
         public virtual IMongoQueryable<T> Table
         {
             get { return this._collection.AsQueryable(); }
-        }
-
-        /// <summary>
-        /// Get collection by filter definitions
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public virtual IList<T> FindByFilterDefinition(FilterDefinition<T> query)
-        {
-            return this._collection.Find(query).ToList();
         }
 
         #endregion

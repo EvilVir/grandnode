@@ -5,6 +5,8 @@
     <Authors>Kuba Pilecki</Authors>
     <Company>Strange Fog Studios</Company>
     <Copyright>Copyright © Strange Fog Studios</Copyright>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,8 +23,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\ReservationsSynchronization\_ViewImports.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\ReservationsSynchronization\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Ical.Net" Version="4.1.11" />
   </ItemGroup>
+  
+  <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'Ical.Net' And '%(Filename)' != 'NodaTime'" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj" />
@@ -38,7 +56,7 @@
     <None Update="logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Views\ExternalReservationsSynchronization\Configure.cshtml">
+    <None Update="Views\ReservationsSynchronization\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

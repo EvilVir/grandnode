@@ -1,8 +1,8 @@
 ﻿Group: External Service Connection
-FriendlyName: California System Endpoint
-SystemName: ExternalSystem.California
+FriendlyName: Reservations Synchronization with external systems
+SystemName: ExternalSystem.ReservationsSynchronization
 Version: 1.00
 SupportedVersions: 4.50
 Author: Strange Fog Studios
 DisplayOrder: 1
-FileName: Grand.Plugin.ExternalSystem.California.dll
+FileName: Grand.Plugin.ExternalSystem.ReservationsSynchronization.dll

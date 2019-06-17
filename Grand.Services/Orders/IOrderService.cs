@@ -1,4 +1,5 @@
 using Grand.Core;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
@@ -85,7 +86,7 @@ namespace Grand.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             DateTime? createdOrUpdatedFromUtc = null, DateTime? createdOrUpdatedToUtc = null,
             DateTime? anyReservationItemFromUtc = null, DateTime? anyReservationItemToUtc = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            OrderStatus? os = null, OrderStatus? nos = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
         

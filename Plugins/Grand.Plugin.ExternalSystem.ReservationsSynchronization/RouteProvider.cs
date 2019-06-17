@@ -10,7 +10,7 @@ namespace Grand.Plugin.ExternalSystem.ReservationsSynchronization
 
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            routeBuilder.MapRoute("Plugin.ExternalSystem.California.Reservations",
+            routeBuilder.MapRoute("Plugin.ExternalSystem.ReservationsSynchronization.ReservationsCalendar",
                     "Api/ReservationsCalendar/{id}",
                     new { controller = "ReservationsCalendar", action = "GetReservations" }
             );

@@ -194,13 +194,17 @@ namespace Grand.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             DateTime? createdOrUpdatedFromUtc = null, DateTime? createdOrUpdatedToUtc = null,
             DateTime? anyReservationItemFromUtc = null, DateTime? anyReservationItemToUtc = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            OrderStatus? os = null, OrderStatus? nos = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             int? orderStatusId = null;
             if (os.HasValue)
                 orderStatusId = (int)os.Value;
+
+            int? notOrderStatusId = null;
+            if (nos.HasValue)
+                notOrderStatusId = (int)nos.Value;
 
             int? paymentStatusId = null;
             if (ps.HasValue)
@@ -253,6 +257,8 @@ namespace Grand.Services.Orders
                 query = query.Where(o => o.OrderItems.Any(i => i.RentalStartDateUtc <= anyReservationItemToUtc.Value && i.RentalEndDateUtc >= anyReservationItemFromUtc.Value));
             if (orderStatusId.HasValue)
                 query = query.Where(o => orderStatusId.Value == o.OrderStatusId);
+            if (notOrderStatusId.HasValue)
+                query = query.Where(o => notOrderStatusId.Value != o.OrderStatusId);
             if (paymentStatusId.HasValue)
                 query = query.Where(o => paymentStatusId.Value == o.PaymentStatusId);
             if (shippingStatusId.HasValue)
