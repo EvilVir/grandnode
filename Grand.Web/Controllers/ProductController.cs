@@ -906,9 +906,11 @@ namespace Grand.Web.Controllers
                 var endDate = new DateTime(year, month, 1, 0, 0, 0, 0).AddMonths(1 + monthOffset); // Requrest month plus one (so end of the month) plus monthOffset number of months (typically 1) to cover days from next month
 
                 var maxQuantity = (await _productService.GetProductById(productId))?.Resources?.Count ?? 0;
-                var inactiveDates = (await productReservationService.GetProductReservationsByProductId(productId, false, startDate, endDate))
+                var grouped = (await productReservationService.GetProductReservationsByProductId(productId, false, startDate, endDate))
                                         .GroupBy(x => x.Date)
-                                        .Where(x => x.Count() + quantity > maxQuantity)
+                                        .ToDictionary(k => k.Key, v => new { Count = v.Count(), List = v.ToList() });
+
+                var inactiveDates = grouped.Where(x => x.Value.Count + quantity > maxQuantity)
                                         .Select(x => x.Key)
                                         .ToHashSet();
 
