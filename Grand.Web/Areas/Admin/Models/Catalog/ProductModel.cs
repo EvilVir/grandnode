@@ -382,6 +382,15 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ReservationEndDelta")]
         public TimeSpan ReservationEndDelta { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ReservationMinimumSlots")]
+        public int? ReservationMinimumSlots { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ReservationMaximumSlots")]
+        public int? ReservationMaximumSlots { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ReservationForceStartWeekDay")]
+        public int? ReservationForceStartWeekDay { get; set; }
+
         public IList<ProductLocalizedModel> Locales { get; set; }
 
 

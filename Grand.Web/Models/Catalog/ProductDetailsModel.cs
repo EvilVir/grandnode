@@ -67,6 +67,10 @@ namespace Grand.Web.Models.Catalog
         public List<SelectListItem> Parameters { get; set; }
         public DateTime StartDate { get; set; }
 
+        public int? ReservationMinimumSlots { get; set; }
+        public int? ReservationMaximumSlots { get; set; }
+        public int? ReservationForceStartWeekDay { get; set; }
+
         public string StockAvailability { get; set; }
         public bool DisplayBackInStockSubscription { get; set; }
         public bool EmailAFriendEnabled { get; set; }

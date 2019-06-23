@@ -562,6 +562,10 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public TimeSpan ReservationEndDelta { get; set; }
 
+        public int? ReservationMinimumSlots { get; set; }
+        public int? ReservationMaximumSlots { get; set; }
+        public int? ReservationForceStartWeekDay { get; set; }
+
         /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>

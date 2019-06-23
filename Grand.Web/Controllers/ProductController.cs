@@ -31,6 +31,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace Grand.Web.Controllers
 {
@@ -906,18 +907,17 @@ namespace Grand.Web.Controllers
                 var endDate = new DateTime(year, month, 1, 0, 0, 0, 0).AddMonths(1 + monthOffset); // Requrest month plus one (so end of the month) plus monthOffset number of months (typically 1) to cover days from next month
 
                 var maxQuantity = (await _productService.GetProductById(productId))?.Resources?.Count ?? 0;
-                var grouped = (await productReservationService.GetProductReservationsByProductId(productId, false, startDate, endDate))
+                var grouped = (await productReservationService.GetProductReservationsByProductId(productId, null, startDate, endDate))
                                         .GroupBy(x => x.Date)
-                                        .ToDictionary(k => k.Key, v => new { Count = v.Count(), List = v.ToList() });
+                                        .ToDictionary(k => k.Key, v => new { Taken = v.Where(x => !string.IsNullOrEmpty(x.OrderId)).Count(), List = v.ToList() });
 
-                var inactiveDates = grouped.Where(x => x.Value.Count + quantity > maxQuantity)
-                                        .Select(x => x.Key)
-                                        .ToHashSet();
-
-                var maxDate = new DateTime(Math.Min(DateTime.Now.Ticks, endDate.Ticks));
-                for (var pastDate = startDate; pastDate < maxDate; pastDate += TimeSpan.FromDays(1))
+                var inactiveDates = new HashSet<DateTime>();
+                for (var d = startDate; d <= endDate; d = d.AddDays(1))
                 {
-                    inactiveDates.Add(pastDate);
+                    if (!grouped.ContainsKey(d) || grouped[d].Taken + quantity > maxQuantity)
+                    {
+                        inactiveDates.Add(d);
+                    }
                 }
 
                 return Json(inactiveDates.OrderBy(x => x).Select(x => x.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));

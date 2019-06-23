@@ -1336,6 +1336,9 @@ namespace Grand.Web.Services
                 model.IntervalUnit = product.IntervalUnitType;
                 model.Interval = product.Interval;
                 model.IncBothDate = product.IncBothDate;
+                model.ReservationForceStartWeekDay = product.ReservationForceStartWeekDay;
+                model.ReservationMaximumSlots = product.ReservationMaximumSlots;
+                model.ReservationMinimumSlots = product.ReservationMinimumSlots;
 
                 var list = reservations.GroupBy(x => x.Parameter).ToList().Select(x => x.Key);
                 foreach (var item in list)

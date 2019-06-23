@@ -3618,6 +3618,24 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationStartDelta">
     <Value>Reservation start delta</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationMinimumSlots">
+    <Value>Minimum reservable amount of slots</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationMinimumSlots.Hint">
+    <Value>For example if reservation unit is days then this parameter force users to book at least that much days at once</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationMaximumSlots">
+    <Value>Maximum reservable amount of slots</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationMaximumSlots.Hint">
+    <Value>For example if reservation unit is days then this parameter restricts users to book more than this number of days at once</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationForceStartWeekDay">
+    <Value>Reservation must start on weekday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationForceStartWeekDay.Hint">
+    <Value>You can use this parameter to force that all reservations of this product will start, for example, at monday (1) or sunday (7) etc.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ReservationStartDelta.Hint">
     <Value>Time that will be added to the first moment of the reservation. (Eg. +15h for full day reservations, so clients can enter the room at 15:00 at first day)</Value>
   </LocaleResource>

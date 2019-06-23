@@ -65,7 +65,7 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
         if (selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
             $('#group-required-other-products').show();
-            $('#group-reservation-deltas').hide();
+            $('#group-reservation-related').hide();
             $('#group-giftcard').show();
             $('#group-downloads').show();
             $('#group-recurring').show();
@@ -83,7 +83,7 @@
             $('#tab-bids').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
             $('#group-required-other-products').hide();
-            $('#group-reservation-deltas').hide();
+            $('#group-reservation-related').hide();
             $('#group-giftcard').hide();
             $('#group-downloads').hide();
             $('#group-recurring').hide();
@@ -101,7 +101,7 @@
             $('#tab-bids').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.Reservation).ToString())){
             $('#group-required-other-products').show();
-            $('#group-reservation-deltas').show();
+            $('#group-reservation-related').show();
             $('#group-giftcard').show();
             $('#group-downloads').show();
             $('#group-shipping').show();
@@ -126,7 +126,7 @@
             $('#tab-inventory-product').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.BundledProduct).ToString())){
             $('#group-required-other-products').hide();
-            $('#group-reservation-deltas').hide();
+            $('#group-reservation-related').hide();
             $('#group-giftcard').hide();
             $('#group-downloads').show();
             $('#group-recurring').hide();
@@ -145,7 +145,7 @@
             $("#@Html.FieldIdFor(model => model.IsRecurring)").prop("checked", false);
         } else if (selectedProductTypeId == @(((int) ProductType.Auction).ToString())){
             $('#tab-bids').show();
-            $('#group-reservation-deltas').hide();
+            $('#group-reservation-related').hide();
             $('#tab-calendar').hide();
             $('#tab-resources').hide();
             $('#tab-bundle-products').hide();
@@ -519,7 +519,7 @@
     </div>
 </div>
 
-<div class="form-horizontal" id="group-reservation-deltas">
+<div class="form-horizontal" id="group-reservation-related">
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="ReservationStartDelta" />
@@ -534,6 +534,30 @@
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="ReservationEndDelta" />
                 <span asp-validation-for="ReservationEndDelta"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="ReservationMinimumSlots" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ReservationMinimumSlots" />
+                <span asp-validation-for="ReservationMinimumSlots"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="ReservationMaximumSlots" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ReservationMaximumSlots" />
+                <span asp-validation-for="ReservationMaximumSlots"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="ReservationForceStartWeekDay" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ReservationForceStartWeekDay" />
+                <span asp-validation-for="ReservationForceStartWeekDay"></span>
             </div>
         </div>
     </div>

@@ -486,6 +486,9 @@ namespace Grand.Services.Catalog
                 .Set(x => x.Resources, product.Resources)
                 .Set(x => x.ReservationEndDelta, product.ReservationEndDelta)
                 .Set(x => x.ReservationStartDelta, product.ReservationStartDelta)
+                .Set(x => x.ReservationMinimumSlots, product.ReservationMinimumSlots)
+                .Set(x => x.ReservationMaximumSlots, product.ReservationMaximumSlots)
+                .Set(x => x.ReservationForceStartWeekDay, product.ReservationForceStartWeekDay)
                 .CurrentDate("UpdatedOnUtc");
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
