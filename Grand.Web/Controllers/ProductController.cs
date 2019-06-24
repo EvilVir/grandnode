@@ -912,9 +912,10 @@ namespace Grand.Web.Controllers
                                         .ToDictionary(k => k.Key, v => new { Taken = v.Where(x => !string.IsNullOrEmpty(x.OrderId)).Count(), List = v.ToList() });
 
                 var inactiveDates = new HashSet<DateTime>();
+                var now = DateTime.Now;
                 for (var d = startDate; d <= endDate; d = d.AddDays(1))
                 {
-                    if (!grouped.ContainsKey(d) || grouped[d].Taken + quantity > maxQuantity)
+                    if (d < now || !grouped.ContainsKey(d) || grouped[d].Taken + quantity > maxQuantity)
                     {
                         inactiveDates.Add(d);
                     }
