@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Grand.Plugin.Payments.DotPay.Services
 {
@@ -59,12 +60,15 @@ namespace Grand.Plugin.Payments.DotPay.Services
         public async Task RedirectToPayGate(Order order)
         {
             var storeLocation = _webHelper.GetStoreLocation();
+            var redirectUrl = $"{storeLocation}/{GetUrlHelper().Action("HandleCustomerReturn", "PaymentDotPay")}";
+            redirectUrl = new Regex("(?<!:)/{2,}").Replace(redirectUrl, "/");
+
             var paymentRequest = new PaymentRequest() {
                 Id = _settings.ShopId,
                 Amount = order.OrderTotal,
                 Currency = order.CustomerCurrencyCode.ToUpperInvariant(),
                 Description = $"{_localizationService.GetResource("Checkout.OrderNumber")} {order.OrderNumber}",
-                Url = $"{storeLocation}/{GetUrlHelper().Action("HandleCustomerReturn", "PaymentDotPay")}",
+                Url = redirectUrl,
                 Type = DotPayRedirectionType.BackButton,
                 ByLaw = true,
                 PersonalData = true,
